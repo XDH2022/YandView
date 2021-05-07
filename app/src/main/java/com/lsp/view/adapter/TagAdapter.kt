@@ -1,4 +1,4 @@
-package com.lsp.view.Adapter
+package com.lsp.view.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +21,7 @@ class TagAdapter(val tagList:List<Tags>):RecyclerView.Adapter<TagAdapter.ViewHol
     fun setOnItemClickListener(mOnItemClickListener: OnItemClickListener){
         this.mOnItemClickListener = mOnItemClickListener
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.tag_item_layout,parent,false)

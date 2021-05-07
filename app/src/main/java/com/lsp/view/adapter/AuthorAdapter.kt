@@ -1,17 +1,14 @@
-package com.lsp.view.Adapter
+package com.lsp.view.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.lsp.view.R
-import com.lsp.view.bean.Size
-import java.math.RoundingMode
-import java.text.DecimalFormat
+import com.lsp.view.bean.Author
 
-class SizeAdapter(val tagList: List<Size>):RecyclerView.Adapter<SizeAdapter.ViewHolder>() {
+class AuthorAdapter (val tagList:List<Author>):RecyclerView.Adapter<AuthorAdapter.ViewHolder>(){
     inner class ViewHolder(view:View):RecyclerView.ViewHolder(view){
         val tagText = view.findViewById<TextView>(R.id.tag)
     }
@@ -23,16 +20,9 @@ class SizeAdapter(val tagList: List<Size>):RecyclerView.Adapter<SizeAdapter.View
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val tag = tagList[position]
-        Log.e("size",tag.file_size)
+        holder.tagText.text = tag.author
         if (position == 0){
-            holder.tagText.text = tag.file_size
             holder.tagText.setBackgroundResource(R.drawable.title_bg)
-        }else{
-            val sizeKb = tag.file_size.toFloat()/1024
-            val format = DecimalFormat("0.##")
-            format.roundingMode = RoundingMode.FLOOR
-            val size =  format.format(sizeKb)
-            holder.tagText.text = "$size Kb"
         }
     }
 

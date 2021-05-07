@@ -1,4 +1,4 @@
-package com.lsp.view.Adapter
+package com.lsp.view.adapter
 
 import android.view.LayoutInflater
 import android.view.View

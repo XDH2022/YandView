@@ -1,4 +1,4 @@
-package com.lsp.view.Adapter
+package com.lsp.view.adapter
 
 import android.content.Context
 import android.content.Intent
@@ -54,7 +54,7 @@ class PostAdapter(val context:Context, private val postList: List<Post>) :Recycl
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val post = postList[position]
         Glide.with(context).load(post.preview_url).into(holder.picImage)
-        if (position==postList.size-1){
+        if (position==postList.size-1&&postList.size>100){
             //到达底部
             mLoadMoreListener.loadMore(position)
         }

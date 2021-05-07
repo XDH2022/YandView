@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -17,7 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.lsp.view.bean.Post
 import com.hentai.yandeview.Retrofit.PostService
 import com.hentai.yandeview.Retrofit.ServiceCreator
-import com.lsp.view.Adapter.PostAdapter
+import com.lsp.view.adapter.PostAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -73,19 +72,11 @@ class MainActivity : AppCompatActivity() {
             return@setOnEditorActionListener false
         }
 
-
-
         fbtn.setOnClickListener {
             if (searchBar.visibility == View.GONE) {
                 showSearchBar()
             }
         }
-
-
-
-
-
-
 
         swipeRefreshLayout.setOnRefreshListener {
             Log.e("Refresh", "Is refresh")
@@ -133,7 +124,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
     private fun loadPost(context: Context, source: String?, tags: String?,page:String){
         nowPosition = postList.size-3
 
@@ -160,15 +150,11 @@ class MainActivity : AppCompatActivity() {
 
                 if (list != null) {
                     for ((i, post) in list.withIndex()) {
-//                        if (list[i].rating=="s") {
-                            postList.add(post)
-//                        }
+                        postList.add(post)
                     }
                 } else {
                     Log.e("Post", "Is null")
                 }
-
-
 
 
                 val layoutManager = GridLayoutManager(context, 2)

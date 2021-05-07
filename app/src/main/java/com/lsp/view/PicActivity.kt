@@ -20,10 +20,10 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.flexbox.*
 import com.google.android.material.snackbar.Snackbar
-import com.lsp.view.Adapter.AuthorAdapter
-import com.lsp.view.Adapter.IdAdapter
-import com.lsp.view.Adapter.SizeAdapter
-import com.lsp.view.Adapter.TagAdapter
+import com.lsp.view.adapter.AuthorAdapter
+import com.lsp.view.adapter.IdAdapter
+import com.lsp.view.adapter.SizeAdapter
+import com.lsp.view.adapter.TagAdapter
 import com.lsp.view.bean.Author
 import com.lsp.view.bean.ID
 import com.lsp.view.bean.Size
