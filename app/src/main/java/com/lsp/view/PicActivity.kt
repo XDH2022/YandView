@@ -71,7 +71,6 @@ class PicActivity : AppCompatActivity() {
             loadTags<Size>(file_size)
         }
 
-
         val sharedPreferences = getSharedPreferences("FirstRun",0)
         val firstRun = sharedPreferences.getBoolean("FirstRun",true)
         if (firstRun){
@@ -89,7 +88,6 @@ class PicActivity : AppCompatActivity() {
         sample_url?.let {
             loadPic(it)
         }
-
 
 
         val file_url = intent.getStringExtra("file_url")
@@ -144,11 +142,6 @@ class PicActivity : AppCompatActivity() {
                 }
             }
         }
-
-
-
-
-
     }
 
     override fun onBackPressed() {
@@ -234,14 +227,12 @@ class PicActivity : AppCompatActivity() {
                     fos.close()
                 }
 
-
             }
         }
         else{
             FileD.mkdirs()
             savePic(file_url,end)
         }
-
 
     }
 
@@ -291,9 +282,7 @@ class PicActivity : AppCompatActivity() {
         return manager
     }
 
-
      private inline fun <reified T> loadTags(tags:String){
-
 
          when(T::class.java){
              Tags::class.java ->{
@@ -341,14 +330,6 @@ class PicActivity : AppCompatActivity() {
 
              }
          }
-
-
-
-
-
-
     }
-
-
 
 }

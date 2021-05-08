@@ -150,7 +150,9 @@ class MainActivity : AppCompatActivity() {
 
                 if (list != null&&list.size>1) {
                     for ((i, post) in list.withIndex()) {
-                        postList.add(post)
+                        if (post.rating=="s"){
+                            postList.add(post)
+                        }
                     }
                 } else {
                     swipeRefreshLayout.isRefreshing = false
