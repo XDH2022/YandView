@@ -1,5 +1,7 @@
 package com.lsp.view
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
@@ -18,6 +20,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.github.chrisbanes.photoview.PhotoView
 import com.google.android.flexbox.*
 import com.google.android.material.snackbar.Snackbar
 import com.lsp.view.adapter.AuthorAdapter
@@ -34,6 +37,7 @@ import java.io.*
 import java.lang.Exception
 import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
+import kotlin.properties.Delegates
 
 class PicActivity : AppCompatActivity() {
 
@@ -43,10 +47,15 @@ class PicActivity : AppCompatActivity() {
     private val idList = ArrayList<ID>()
     private val time = System.currentTimeMillis()
     private val sizeList = ArrayList<Size>()
+    private lateinit var image:ImageView
+    private lateinit var photoView:PhotoView
+    private var shortAnnotationDuration by Delegates.notNull<Int>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pic)
-
+        image =findViewById<ImageView>(R.id.titleImage)
+        shortAnnotationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
         val intent = intent
         val tags = intent.getStringExtra("tags")
         if (tags != null) {
@@ -91,8 +100,31 @@ class PicActivity : AppCompatActivity() {
                 "${time}.$file_ext"
 
 
+        photoView = findViewById<PhotoView>(R.id.photoView)
+
+        image.setOnClickListener {
+            photoView.apply {
+                alpha = 0f
+                visibility = View.VISIBLE
+                animate()
+                    .alpha(1f)
+                    .setDuration(shortAnnotationDuration.toLong())
+                    .setListener(null)
+            }
+            Glide.with(this).load(sample_url).into(photoView)
 
 
+        }
+        photoView.setOnClickListener {
+            photoView.animate()
+                .alpha(0f)
+                .setDuration(shortAnnotationDuration.toLong())
+                .setListener(object : AnimatorListenerAdapter(){
+                    override fun onAnimationEnd(animation: Animator?) {
+                        photoView.visibility = View.GONE
+                    }
+                })
+        }
 
         fbtn.setOnClickListener {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!=
@@ -117,6 +149,21 @@ class PicActivity : AppCompatActivity() {
 
 
 
+    }
+
+    override fun onBackPressed() {
+        if (photoView.visibility==View.GONE) {
+            super.onBackPressed()
+        }else{
+            photoView.animate()
+                .alpha(0f)
+                .setDuration(shortAnnotationDuration.toLong())
+                .setListener(object : AnimatorListenerAdapter(){
+                    override fun onAnimationEnd(animation: Animator?) {
+                        photoView.visibility = View.GONE
+                    }
+                })
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -199,7 +246,7 @@ class PicActivity : AppCompatActivity() {
     }
 
     private fun loadPic(url:String){
-        val image = findViewById<ImageView>(R.id.titleImage)
+
         Glide.with(this).load(url).listener(object :RequestListener<Drawable?>{
             override fun onLoadFailed(
                 e: GlideException?,

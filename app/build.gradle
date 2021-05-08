@@ -33,6 +33,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.lcodecorex:tkrefreshlayout:1.0.7'
     api 'com.google.android:flexbox:1.0.0'
     implementation ('androidx.swiperefreshlayout:swiperefreshlayout:1.1.0')

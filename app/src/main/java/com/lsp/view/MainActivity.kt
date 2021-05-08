@@ -148,12 +148,15 @@ class MainActivity : AppCompatActivity() {
                     )
                 val list = response.body()
 
-                if (list != null) {
+                if (list != null&&list.size>1) {
                     for ((i, post) in list.withIndex()) {
                         postList.add(post)
                     }
                 } else {
+                    swipeRefreshLayout.isRefreshing = false
+                    Snackbar.make(swipeRefreshLayout,"只有这么多了哦",Snackbar.LENGTH_SHORT).show()
                     Log.e("Post", "Is null")
+                    return
                 }
 
 
