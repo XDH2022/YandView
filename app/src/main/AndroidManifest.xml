@@ -14,7 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LspView">
-        <activity android:name=".PicActivity"></activity>
+        <activity android:name=".PicActivity"
+            android:configChanges="uiMode"
+            ></activity>
         <activity android:name=".MainActivity">
 
             <intent-filter>

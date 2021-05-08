@@ -4,12 +4,14 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.os.Looper
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -61,6 +63,9 @@ class PicActivity : AppCompatActivity() {
         if (tags != null) {
             loadTags<Tags>(tags)
         }
+
+
+
 
         val author = intent.getStringExtra("author")
         if (author!=null){
