@@ -1,4 +1,4 @@
-package com.lsp.view.adapter
+package com.lsp.view.main
 
 import android.content.Context
 import android.content.Intent
@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.lsp.view.bean.Post
-import com.lsp.view.PicActivity
+import com.lsp.view.pic.PicActivity
 import com.lsp.view.R
 
 class PostAdapter(val context:Context, private val postList: List<Post>) :RecyclerView.Adapter<PostAdapter.ViewHolder>(){
@@ -26,7 +28,7 @@ class PostAdapter(val context:Context, private val postList: List<Post>) :Recycl
             val position = viewHolder.adapterPosition
             Log.e("position",position.toString())
             Log.e("url",postList[position].sample_url)
-            val intent = Intent(context,PicActivity::class.java)
+            val intent = Intent(context, PicActivity::class.java)
             intent.putExtra("id",postList[position].id)
             intent.putExtra("sample_url",postList[position].sample_url)
             intent.putExtra("file_url",postList[position].file_url)
@@ -40,7 +42,7 @@ class PostAdapter(val context:Context, private val postList: List<Post>) :Recycl
         return viewHolder
     }
 
-    private lateinit var mLoadMoreListener:OnLoadMoreListener
+    private lateinit var mLoadMoreListener: OnLoadMoreListener
 
     interface  OnLoadMoreListener{
         fun loadMore(position: Int)
@@ -53,7 +55,8 @@ class PostAdapter(val context:Context, private val postList: List<Post>) :Recycl
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val post = postList[position]
-        Glide.with(context).load(post.preview_url).into(holder.picImage)
+        val glideUrl = GlideUrl(post.preview_url, LazyHeaders.Builder().addHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36").build())
+        Glide.with(context).load(glideUrl).into(holder.picImage)
         if (position==postList.size-1&&postList.size>6){
             //到达底部
             mLoadMoreListener.loadMore(position)

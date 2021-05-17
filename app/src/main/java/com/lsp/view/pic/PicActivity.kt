@@ -1,38 +1,37 @@
-package com.lsp.view
+package com.lsp.view.pic
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.os.Looper
 import android.util.Log
-import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.github.chrisbanes.photoview.PhotoView
 import com.google.android.flexbox.*
 import com.google.android.material.snackbar.Snackbar
-import com.lsp.view.adapter.AuthorAdapter
-import com.lsp.view.adapter.IdAdapter
-import com.lsp.view.adapter.SizeAdapter
-import com.lsp.view.adapter.TagAdapter
+import com.lsp.view.R
 import com.lsp.view.bean.Author
 import com.lsp.view.bean.ID
 import com.lsp.view.bean.Size
 import com.lsp.view.bean.Tags
+import com.lsp.view.main.MainActivity
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.*
@@ -83,7 +82,9 @@ class PicActivity : AppCompatActivity() {
             sharedPreferences.putBoolean("FirstRun",false)
             val FileD = File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake")
             FileD.mkdirs()
+
         }
+
 
         val id = intent.getStringExtra("id")
         if (id!=null){
@@ -94,10 +95,11 @@ class PicActivity : AppCompatActivity() {
             loadPic(it)
         }
 
-
         val file_url = intent.getStringExtra("file_url")
         val file_ext = intent.getStringExtra("file_ext")
-        val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fbtn)
+        val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
+            R.id.fbtn
+        )
 
         val path = "${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/" +
                 "${time}.$file_ext"
@@ -171,7 +173,9 @@ class PicActivity : AppCompatActivity() {
     ) {
         val file_ext = intent.getStringExtra("file_ext")
         val file_url = intent.getStringExtra("file_url")
-        val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fbtn)
+        val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
+            R.id.fbtn
+        )
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when(requestCode){
@@ -242,8 +246,9 @@ class PicActivity : AppCompatActivity() {
     }
 
     private fun loadPic(url:String){
+        val glideUrl = GlideUrl(url, LazyHeaders.Builder().addHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36").build())
 
-        Glide.with(this).load(url).listener(object :RequestListener<Drawable?>{
+        Glide.with(this).load(glideUrl).listener(object :RequestListener<Drawable?>{
             override fun onLoadFailed(
                 e: GlideException?,
                 model: Any?,
@@ -251,7 +256,17 @@ class PicActivity : AppCompatActivity() {
                 isFirstResource: Boolean
             ): Boolean {
                 val pb = findViewById<ProgressBar>(R.id.pb)
-                Snackbar.make(pb,"加载错误",Snackbar.LENGTH_SHORT).show()
+                Log.e("erroe",e.toString())
+                Snackbar.make(pb,"加载错误",Snackbar.LENGTH_LONG).setAction("查看Log"){
+                    AlertDialog.Builder(this@PicActivity).apply {
+                        setTitle("Log")
+                        setMessage(e.toString())
+                        setNegativeButton("确定",null)
+                        create()
+                        show()
+                    }
+                }.show()
+                pb.visibility = View.INVISIBLE
                 return false
 
             }
@@ -299,9 +314,9 @@ class PicActivity : AppCompatActivity() {
                      tagList.add(Tags(tag))
                  }
                  val adapter = TagAdapter(tagList)
-                 adapter.setOnItemClickListener(object :TagAdapter.OnItemClickListener{
+                 adapter.setOnItemClickListener(object : TagAdapter.OnItemClickListener{
                      override fun onItemClick(view: View, position: Int) {
-                         val intent = Intent(this@PicActivity,MainActivity::class.java)
+                         val intent = Intent(this@PicActivity, MainActivity::class.java)
                          intent.putExtra("searchTag",tagList[position].tag)
                          startActivity(intent)
                      }

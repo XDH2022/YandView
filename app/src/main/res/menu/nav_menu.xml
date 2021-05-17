@@ -2,13 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/yande"
-            android:icon="@drawable/ic_launcher_foreground"
-            android:title="Yande.re"/>
+            android:id="@+id/photo"
+            android:icon="@drawable/ic_baseline_insert_photo_24"
+            android:title="Photo"/>
         <item
-            android:id="@+id/ko"
-            android:icon="@drawable/ic_launcher_foreground"
-            android:title="Yande.re"/>
+            android:id="@+id/fav"
+            android:icon="@drawable/ic_baseline_favorite_24"
+            android:title="Favorite"/>
+        <item
+            android:id="@+id/taglist"
+            android:icon="@drawable/ic_baseline_label_24"
+            android:title="Tags"/>
     </group>
-
 </menu>

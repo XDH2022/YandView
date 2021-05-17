@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    android:id="@+id/drawerLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".main.MainActivity">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.MainActivity">
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -77,8 +84,6 @@
                 android:paddingStart="10dp"
                 android:textSize="20sp"
                 android:layout_width="match_parent"
-                android:textColor="#000"
-                android:background="@drawable/edit_bg"
                 android:layout_height="?attr/actionBarSize"
                 android:id="@+id/search"/>
             <View
@@ -95,9 +100,17 @@
             android:layout_weight="1"/>
     </LinearLayout>
 
-
-
-
-
-
 </RelativeLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:id="@+id/nav"
+        android:layout_gravity="start"
+        app:menu="@menu/nav_menu"
+        app:headerLayout="@layout/nav_header"
+        android:fitsSystemWindows="true"/>
+<!--        TODO 侧边连：登录 收藏 Tag列表-->
+
+
+</androidx.drawerlayout.widget.DrawerLayout>
+

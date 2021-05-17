@@ -1,22 +1,31 @@
-package com.lsp.view
+package com.lsp.view.main
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.lsp.view.bean.Post
 import com.hentai.yandeview.Retrofit.PostService
 import com.hentai.yandeview.Retrofit.ServiceCreator
-import com.lsp.view.adapter.PostAdapter
+import com.lsp.view.R
+import com.lsp.view.login.LoginActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var searchBar:LinearLayout
     private var shortAnnotationDuration:Int = 0
     private var nowPage = 1
-    private lateinit var adapter:PostAdapter
+    private lateinit var adapter: PostAdapter
     private var isLoading = false
     private var nowPosition by Delegates.notNull<Int>()
 
@@ -56,6 +65,10 @@ class MainActivity : AppCompatActivity() {
         val close = findViewById<View>(R.id.close)
         val editCard = findViewById<com.google.android.material.card.MaterialCardView>(R.id.editCard)
 
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24)
+        }
 
         searchBar = findViewById<LinearLayout>(R.id.search_bar)
         shortAnnotationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
@@ -84,6 +97,23 @@ class MainActivity : AppCompatActivity() {
             nowPage = 1
             loadPost(this, null, searchTag,nowPage.toString())
         }
+        //登录
+        /**
+        val headerView = LayoutInflater.from(this).inflate(R.layout.nav_header,null)
+        val name = headerView.findViewById<TextView>(R.id.name)
+        name.setOnClickListener {
+
+            val intent = Intent(this,LoginActivity::class.java)
+            startActivity(intent)
+        }*/
+        //侧边栏
+
+
+        val nav = findViewById<NavigationView>(R.id.nav)
+        nav.setCheckedItem(R.id.photo)
+        nav.setNavigationItemSelectedListener {
+            true
+        }
 
 
     }
@@ -106,6 +136,14 @@ class MainActivity : AppCompatActivity() {
                 .setDuration(shortAnnotationDuration.toLong())
                 .setListener(null)
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+        when(item.itemId){
+            android.R.id.home ->  drawerLayout.openDrawer(GravityCompat.START)
+        }
+        return true
     }
 
 
@@ -138,7 +176,7 @@ class MainActivity : AppCompatActivity() {
                 val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
                     R.id.fbtn
                 )
-                Snackbar.make(fbtn,"请检查网络连接",Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(fbtn,"请检查网络连接",Snackbar.LENGTH_LONG).show()
             }
 
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
@@ -174,7 +212,7 @@ class MainActivity : AppCompatActivity() {
                     adapter = PostAdapter(context, postList)
                     recyclerView.adapter = adapter
                 }
-                adapter.setLoadMoreListener(object :PostAdapter.OnLoadMoreListener{
+                adapter.setLoadMoreListener(object : PostAdapter.OnLoadMoreListener{
                     override fun loadMore(position: Int) {
                         nowPage++
                         swipeRefreshLayout.isRefreshing = true
