@@ -79,7 +79,7 @@ class PicActivity : AppCompatActivity() {
         val firstRun = sharedPreferences.getBoolean("FirstRun",true)
         if (firstRun){
             val sharedPreferences = getSharedPreferences("FirstRun",0).edit()
-            sharedPreferences.putBoolean("FirstRun",false)
+            sharedPreferences.putBoolean("FirstRun",false).apply()
             val FileD = File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake")
             FileD.mkdirs()
 
@@ -257,15 +257,16 @@ class PicActivity : AppCompatActivity() {
             ): Boolean {
                 val pb = findViewById<ProgressBar>(R.id.pb)
                 Log.e("erroe",e.toString())
-                Snackbar.make(pb,"加载错误",Snackbar.LENGTH_LONG).setAction("查看Log"){
+                Snackbar.make(pb, "加载错误", Snackbar.LENGTH_LONG).setAction("查看Log") {
                     AlertDialog.Builder(this@PicActivity).apply {
                         setTitle("Log")
                         setMessage(e.toString())
-                        setNegativeButton("确定",null)
+                        setNegativeButton("确定", null)
                         create()
                         show()
                     }
                 }.show()
+
                 pb.visibility = View.INVISIBLE
                 return false
 

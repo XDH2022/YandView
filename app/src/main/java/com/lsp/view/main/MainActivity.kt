@@ -5,16 +5,15 @@ import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -41,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: PostAdapter
     private var isLoading = false
     private var nowPosition by Delegates.notNull<Int>()
+    private var username:String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +51,9 @@ class MainActivity : AppCompatActivity() {
         val swipeRefreshLayout = findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
             R.id.swipeRefreshLayout
         )
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+
+
         search = findViewById<EditText>(R.id.search)
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -99,23 +102,76 @@ class MainActivity : AppCompatActivity() {
         }
         //登录
         /**
-        val headerView = LayoutInflater.from(this).inflate(R.layout.nav_header,null)
-        val name = headerView.findViewById<TextView>(R.id.name)
+
         name.setOnClickListener {
 
             val intent = Intent(this,LoginActivity::class.java)
             startActivity(intent)
         }*/
         //侧边栏
-
+        val sp = getSharedPreferences("username",0)
+        username = sp.getString("username",null)
+//        val headerView = LayoutInflater.from(this).inflate(R.layout.nav_header,null)
+//        val name = headerView.findViewById<TextView>(R.id.name)
+//        name.text= username
 
         val nav = findViewById<NavigationView>(R.id.nav)
+        val headerView = nav.getHeaderView(0)
+        val name = headerView.findViewById<TextView>(R.id.name)
+        name.text = username
+        name.setOnClickListener {
+            alterEditDialog()
+        }
+
         nav.setCheckedItem(R.id.photo)
         nav.setNavigationItemSelectedListener {
-            true
+            when(it.itemId){
+                //收藏夹
+                R.id.fav -> {
+                    swipeRefreshLayout.isRefreshing=true
+                    Log.e("touch","touch1")
+                    Log.e("username",username.toString())
+                    Log.e("touch","touch2")
+                    if (username == null) {
+                        alterEditDialog()
+                        postList.clear()
+                        loadPost(this,null,"vote:3:$username order:vote","1")
+                    }else{
+                        postList.clear()
+                        Log.e("username","true")
+                        loadPost(this,null,"vote:3:$username order:vote","1")
+                    }
+                    drawerLayout.closeDrawers()
+                    true
+                }
+                R.id.photo ->{
+                    swipeRefreshLayout.isRefreshing = true
+                    postList.clear()
+                    loadPost(this,null,null,"1")
+                    drawerLayout.closeDrawers()
+                    true
+                }
+                else -> false
+            }
         }
 
 
+    }
+    private fun alterEditDialog(){
+        val et = EditText(this)
+        AlertDialog.Builder(this)
+            .setTitle("请输入您的用户名")
+            .setView(et)
+            .setPositiveButton("确定") { _, _ ->
+                Log.e("edit",et.text.toString())
+                val sharedPreferences = getSharedPreferences("username", 0).edit()
+                sharedPreferences.putString("username",et.text.toString()).apply()
+                username = et.text.toString()
+                val nav = findViewById<NavigationView>(R.id.nav)
+                val headerView = nav.getHeaderView(0)
+                val name = headerView.findViewById<TextView>(R.id.name)
+                name.text = username
+            }.create().show()
     }
     private fun hiddenSearchBar(){
         searchBar.animate()
@@ -177,6 +233,8 @@ class MainActivity : AppCompatActivity() {
                     R.id.fbtn
                 )
                 Snackbar.make(fbtn,"请检查网络连接",Snackbar.LENGTH_LONG).show()
+                val handler = Handler()
+                handler.postDelayed({ loadPost(context, source, tags, page) },5000)
             }
 
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
