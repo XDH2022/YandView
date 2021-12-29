@@ -25,6 +25,7 @@ import com.hentai.yandeview.Retrofit.PostService
 import com.hentai.yandeview.Retrofit.ServiceCreator
 import com.lsp.view.R
 import com.lsp.view.login.LoginActivity
+import com.lsp.view.setting.SettingsActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -45,6 +46,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val configSp =  getSharedPreferences("config",0)
+        if (configSp.getString("source",null)==null){
+            configSp.edit().putString("source","https://yande.re/").apply()
+            configSp.edit().putString("type","0").apply()
+        }
+
+
         val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
             R.id.fbtn
         )
@@ -66,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             searchAction(searchTag)
         }else{
             swipeRefreshLayout.isRefreshing = true
-            loadPost(this, null, null,nowPage.toString())
+            loadPost(this, null,nowPage.toString())
         }
         val close = findViewById<View>(R.id.close)
         val editCard = findViewById<com.google.android.material.card.MaterialCardView>(R.id.editCard)
@@ -101,7 +110,7 @@ class MainActivity : AppCompatActivity() {
             Log.e("Refresh", "Is refresh")
             postList.clear()
             nowPage = 1
-            loadPost(this, null, searchTag,nowPage.toString())
+            loadPost(this, searchTag,nowPage.toString())
         }
 
         //侧边栏
@@ -124,11 +133,11 @@ class MainActivity : AppCompatActivity() {
                     if (username == null) {
                         alterEditDialog()
                         postList.clear()
-                        loadPost(this,null,"vote:3:$username order:vote","1")
+                        loadPost(this,"vote:3:$username order:vote","1")
                         drawerLayout.closeDrawers()
                     }else{
                         postList.clear()
-                        loadPost(this,null,"vote:3:$username order:vote","1")
+                        loadPost(this,"vote:3:$username order:vote","1")
                         drawerLayout.closeDrawers()
                     }
 
@@ -138,9 +147,17 @@ class MainActivity : AppCompatActivity() {
                 R.id.photo ->{
                     swipeRefreshLayout.isRefreshing = true
                     postList.clear()
-                    loadPost(this,null,null,"1")
+                    loadPost(this,null,"1")
                     drawerLayout.closeDrawers()
                     true
+                }
+                //设置
+                R.id.settings -> {
+                    val intent = Intent(this,SettingsActivity::class.java)
+                    startActivity(intent)
+                    drawerLayout.closeDrawers()
+                    false
+
                 }
                 else -> false
             }
@@ -203,10 +220,23 @@ class MainActivity : AppCompatActivity() {
         )
         swipeRefreshLayout.isRefreshing = true
         postList.clear()
-        loadPost(this, null, tags,"1")
+        loadPost(this, tags,"1")
 
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        val swipeRefreshLayout = findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
+            R.id.swipeRefreshLayout
+        )
+        swipeRefreshLayout.isRefreshing = true
+
+        postList.clear()
+        loadPost(this,searchTag,nowPage.toString())
+    }
+
+
 
     /**
      * 加载画廊
@@ -214,23 +244,35 @@ class MainActivity : AppCompatActivity() {
      * @param tags 标签
      * @param page 页数
      */
-    private fun loadPost(context: Context, source: String?, tags: String?,page:String){
+    private fun loadPost(context: Context, tags: String?,page:String){
+
+        val configSp =  getSharedPreferences("config",0)
+        val source =  configSp.getString("source",null)
+        val tyep = configSp.getString("type",null)
+        Log.w("load",source.toString())
+
         nowPosition = postList.size-3
 
         val postService: PostService = if(source!=null){
             ServiceCreator.create<PostService>(source)
-        }else{
+        }else {
             ServiceCreator.create<PostService>("https://yande.re/")
         }
+        var service:Call<List<Post>>
+        if (tyep.equals("0")){
+            service   =  postService.getPostData("100", tags,page)
+        }else{
+            service =  postService.getPostData_php("dapi","post","index","100",tags,"1")
+        }
 
-        postService.getPostData("220", tags,page).enqueue(object : Callback<List<Post>> {
+        service.enqueue(object : Callback<List<Post>> {
             override fun onFailure(call: Call<List<Post>>, t: Throwable) {
                 val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
                     R.id.fbtn
                 )
                 Snackbar.make(fbtn,"请检查网络连接",Snackbar.LENGTH_LONG).show()
                 val handler = Handler()
-                handler.postDelayed({ loadPost(context, source, tags, page) },5000)
+                handler.postDelayed({ loadPost(context, tags, page) },5000)
             }
 
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
@@ -265,13 +307,14 @@ class MainActivity : AppCompatActivity() {
                 }else{
                     adapter = PostAdapter(context, postList)
                     recyclerView.adapter = adapter
+
                 }
                 adapter.setLoadMoreListener(object : PostAdapter.OnLoadMoreListener{
                     override fun loadMore(position: Int) {
                         nowPage++
                         swipeRefreshLayout.isRefreshing = true
                         isLoading = true
-                        loadPost(this@MainActivity,null,tags,nowPage.toString())
+                        loadPost(this@MainActivity,tags,nowPage.toString())
                     }
 
                 })

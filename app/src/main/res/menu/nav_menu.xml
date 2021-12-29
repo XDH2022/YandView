@@ -13,5 +13,8 @@
             android:id="@+id/taglist"
             android:icon="@drawable/ic_baseline_label_24"
             android:title="Tags"/>
+        <item
+            android:id="@+id/settings"
+            android:title="Setting"/>
     </group>
 </menu>
