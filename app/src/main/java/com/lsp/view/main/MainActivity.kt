@@ -120,10 +120,15 @@ class MainActivity : AppCompatActivity() {
                     Log.e("touch","touch2")
                     if (username == null) {
                         alterEditDialog()
+                        postList.clear()
+                        loadPost(this,null,"vote:3:$username order:vote","1")
+                        drawerLayout.closeDrawers()
+                    }else{
+                        postList.clear()
+                        loadPost(this,null,"vote:3:$username order:vote","1")
+                        drawerLayout.closeDrawers()
                     }
-                    postList.clear()
-                    loadPost(this,null,"vote:3:$username order:vote","1")
-                    drawerLayout.closeDrawers()
+
                     true
                 }
                 R.id.photo ->{
