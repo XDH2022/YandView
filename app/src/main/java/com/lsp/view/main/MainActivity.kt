@@ -108,12 +108,6 @@ class MainActivity : AppCompatActivity() {
 
 
         val nav = findViewById<NavigationView>(R.id.nav)
-        val headerView = nav.getHeaderView(0)
-        val name = headerView.findViewById<TextView>(R.id.name)
-        name.text = username
-        name.setOnClickListener {
-            alterEditDialog()
-        }
 
         nav.setCheckedItem(R.id.photo)
         nav.setNavigationItemSelectedListener {
@@ -154,11 +148,6 @@ class MainActivity : AppCompatActivity() {
                 Log.e("edit",et.text.toString())
                 val sharedPreferences = getSharedPreferences("username", 0).edit()
                 sharedPreferences.putString("username",et.text.toString()).apply()
-                username = et.text.toString()
-                val nav = findViewById<NavigationView>(R.id.nav)
-                val headerView = nav.getHeaderView(0)
-                val name = headerView.findViewById<TextView>(R.id.name)
-                name.text = username
             }.create().show()
     }
     private fun hiddenSearchBar(){
@@ -205,6 +194,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
 
     private fun loadPost(context: Context, source: String?, tags: String?,page:String){
         nowPosition = postList.size-3
