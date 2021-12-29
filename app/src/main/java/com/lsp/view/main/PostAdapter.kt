@@ -56,7 +56,21 @@ class PostAdapter(val context:Context, private val postList: List<Post>) :Recycl
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val post = postList[position]
         //TODO 增加XML解析 节省流量
-        val glideUrl = GlideUrl(post.file_url, LazyHeaders.Builder().addHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36").build())
+        val glideUrl:GlideUrl
+        var source:String
+        if (post.preview_url!=null) {
+            source =  post.preview_url
+
+        }else{
+            source = post.file_url
+        }
+        glideUrl = GlideUrl(source
+            ,
+            LazyHeaders.Builder().addHeader(
+                "User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
+            ).build()
+        )
         Glide.with(context).load(glideUrl).into(holder.picImage)
         if (position==postList.size-1&&postList.size>6){
             //到达底部

@@ -262,7 +262,7 @@ class MainActivity : AppCompatActivity() {
         if (tyep.equals("0")){
             service   =  postService.getPostData("100", tags,page)
         }else{
-            service =  postService.getPostData_php("dapi","post","index","100",tags,"1")
+            service =  postService.getPostData_php("dapi","post","index","100",tags,"1",nowPage.toString())
         }
 
         service.enqueue(object : Callback<List<Post>> {
