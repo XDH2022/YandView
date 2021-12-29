@@ -23,9 +23,9 @@ public class StrToHash1 {
     private static String bytes2Hex(byte[] bts){
         StringBuilder des = new StringBuilder();
         String tmp = null;
-        for (int i =0;i<bts.length;i++){
-            tmp = Integer.toHexString(bts[i] & 0xFF);
-            if (tmp.length()==1){
+        for (byte bt : bts) {
+            tmp = Integer.toHexString(bt & 0xFF);
+            if (tmp.length() == 1) {
                 des.append("0");
             }
             des.append(tmp);

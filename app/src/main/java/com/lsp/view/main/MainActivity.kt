@@ -101,19 +101,11 @@ class MainActivity : AppCompatActivity() {
             loadPost(this, null, searchTag,nowPage.toString())
         }
         //登录
-        /**
 
-        name.setOnClickListener {
-
-            val intent = Intent(this,LoginActivity::class.java)
-            startActivity(intent)
-        }*/
         //侧边栏
         val sp = getSharedPreferences("username",0)
         username = sp.getString("username",null)
-//        val headerView = LayoutInflater.from(this).inflate(R.layout.nav_header,null)
-//        val name = headerView.findViewById<TextView>(R.id.name)
-//        name.text= username
+
 
         val nav = findViewById<NavigationView>(R.id.nav)
         val headerView = nav.getHeaderView(0)
@@ -134,13 +126,9 @@ class MainActivity : AppCompatActivity() {
                     Log.e("touch","touch2")
                     if (username == null) {
                         alterEditDialog()
-                        postList.clear()
-                        loadPost(this,null,"vote:3:$username order:vote","1")
-                    }else{
-                        postList.clear()
-                        Log.e("username","true")
-                        loadPost(this,null,"vote:3:$username order:vote","1")
                     }
+                    postList.clear()
+                    loadPost(this,null,"vote:3:$username order:vote","1")
                     drawerLayout.closeDrawers()
                     true
                 }
@@ -280,9 +268,7 @@ class MainActivity : AppCompatActivity() {
 
                 })
 
-
                 swipeRefreshLayout.isRefreshing = false
-
 
             }
         })

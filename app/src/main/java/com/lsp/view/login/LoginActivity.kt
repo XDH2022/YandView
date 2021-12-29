@@ -26,18 +26,11 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         val login = findViewById<FloatingActionButton>(R.id.login)
 
-        AlertDialog.Builder(this).apply {
-            setMessage("目前阶段登录没有任何实质的用处,仅会保存你输入的用户名用于搜索你的收藏夹,而通过登录获取到的Cookie在将来可能会有实质的用处,Cookie将不会保存,如你不需要使用收藏夹，请直接点击登录按钮。")
-            setTitle("关于登录")
-            setPositiveButton("确定"){it,_->
-                it.dismiss()
-            }
-        }.create().show()
 
         login.setOnClickListener {
             val username = findViewById<EditText>(R.id.username)
             val password = findViewById<EditText>(R.id.password)
-            val sPassword = "choujin-steiner--${password.text.toString()}--"
+            val sPassword = "choujin-steiner--${password.text}--"
             val hash1Password = StrToHash1.shaEncrypt(sPassword)
             thread {
                 conn(username.text.toString(),hash1Password)

@@ -32,7 +32,7 @@ class SizeAdapter(val tagList: List<Size>):RecyclerView.Adapter<SizeAdapter.View
             val format = DecimalFormat("0.##")
             format.roundingMode = RoundingMode.FLOOR
             val size =  format.format(sizeKb)
-            holder.tagText.text = "$size Kb"
+            holder.tagText.text = "$size KB"
         }
     }
 
