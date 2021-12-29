@@ -220,58 +220,6 @@ class PicActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-//    private fun savePic(file_url:String, end: String){
-//        val FileD = File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/")
-//        if (FileD.exists()) {
-//            thread {
-//                val file = File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/$time.$end")
-//                val fos = FileOutputStream(file)
-//                try {
-//                    Looper.prepare()
-//                    val fbtn =
-//                        findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
-//                            R.id.fbtn
-//                        )
-//
-//                    Snackbar.make(fbtn, "开始保存", Snackbar.LENGTH_SHORT).show()
-//                    val client = OkHttpClient()
-//                    val request = Request.Builder()
-//                        .url(file_url)
-//                        .build()
-//                    val response = client.newCall(request).execute()
-//                    val responseData = response.body()?.bytes()
-//                    if (response.code()==200) {
-//                        fos.write(responseData)
-//                        Snackbar.make(fbtn, "保存成功", Snackbar.LENGTH_SHORT).show()
-//                    }
-//
-//                    else {
-//                        Log.e("Test","errorNet")
-//                        Snackbar.make(fbtn, "下载异常", Snackbar.LENGTH_SHORT).show()
-//                        file.delete()
-//                    }
-//
-//                    Looper.loop()
-//
-//
-//                } catch (e: Exception) {
-//                    e.printStackTrace()
-//                } finally {
-//                    fos.close()
-//                }
-//
-//            }
-//        }
-//        else{
-//            FileD.mkdirs()
-//            savePic(file_url,end)
-//        }
-//
-//    }
-
     private fun loadPic(url:String){
         val glideUrl = GlideUrl(url, LazyHeaders.Builder().addHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36").build())
 
