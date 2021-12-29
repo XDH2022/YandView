@@ -303,6 +303,8 @@ class PicActivity : AppCompatActivity() {
         return manager
     }
 
+    //设置tags列表
+    //这写的很烂 得改
      private inline fun <reified T> loadTags(tags:String){
 
          when(T::class.java){

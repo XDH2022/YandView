@@ -57,7 +57,10 @@ class MainActivity : AppCompatActivity() {
         search = findViewById<EditText>(R.id.search)
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
+        //快捷搜索tag 来自PicActivity
         searchTag = intent.getStringExtra("searchTag")
+
+
         if (searchTag!=null){
             this.search.setText(searchTag)
             searchAction(searchTag)
@@ -100,16 +103,16 @@ class MainActivity : AppCompatActivity() {
             nowPage = 1
             loadPost(this, null, searchTag,nowPage.toString())
         }
-        //登录
 
         //侧边栏
         val sp = getSharedPreferences("username",0)
         username = sp.getString("username",null)
 
-
         val nav = findViewById<NavigationView>(R.id.nav)
 
+        //加载导航栏列表
         nav.setCheckedItem(R.id.photo)
+        //设置侧边栏点击逻辑
         nav.setNavigationItemSelectedListener {
             when(it.itemId){
                 //收藏夹
@@ -131,6 +134,7 @@ class MainActivity : AppCompatActivity() {
 
                     true
                 }
+                //画廊
                 R.id.photo ->{
                     swipeRefreshLayout.isRefreshing = true
                     postList.clear()
@@ -144,6 +148,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+    //弹出键入用户名对话框
     private fun alterEditDialog(){
         val et = EditText(this)
         AlertDialog.Builder(this)
@@ -155,6 +160,7 @@ class MainActivity : AppCompatActivity() {
                 sharedPreferences.putString("username",et.text.toString()).apply()
             }.create().show()
     }
+    //隐藏搜索栏
     private fun hiddenSearchBar(){
         searchBar.animate()
             .alpha(0f)
@@ -165,6 +171,7 @@ class MainActivity : AppCompatActivity() {
                 }
             })
     }
+    //现实搜索栏
     private fun showSearchBar(){
         searchBar.apply {
             alpha = 0f
@@ -189,6 +196,7 @@ class MainActivity : AppCompatActivity() {
         val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
     }
+    //执行搜索
     private fun searchAction(tags: String?) {
         val swipeRefreshLayout = findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
             R.id.swipeRefreshLayout
@@ -200,7 +208,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
+    /**
+     * 加载画廊
+     * @param source 加载源
+     * @param tags 标签
+     * @param page 页数
+     */
     private fun loadPost(context: Context, source: String?, tags: String?,page:String){
         nowPosition = postList.size-3
 
