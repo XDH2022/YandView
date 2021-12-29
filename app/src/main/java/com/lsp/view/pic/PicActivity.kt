@@ -2,17 +2,22 @@ package com.lsp.view.pic
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -32,12 +37,14 @@ import com.lsp.view.bean.ID
 import com.lsp.view.bean.Size
 import com.lsp.view.bean.Tags
 import com.lsp.view.main.MainActivity
+import com.lsp.view.service.DownloadService
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.*
 import java.lang.Exception
 import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
+import kotlin.math.log
 import kotlin.properties.Delegates
 
 class PicActivity : AppCompatActivity() {
@@ -51,12 +58,18 @@ class PicActivity : AppCompatActivity() {
     private lateinit var image:ImageView
     private lateinit var photoView:PhotoView
     private var shortAnnotationDuration by Delegates.notNull<Int>()
+    lateinit var downloadBinder:DownloadService.DownloadBinder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pic)
+        val serviceIntent = Intent(this,DownloadService::class.java)
+        bindService(serviceIntent,connection, Context.BIND_AUTO_CREATE)
+
         image =findViewById<ImageView>(R.id.titleImage)
         shortAnnotationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
+
+
         val intent = intent
         val tags = intent.getStringExtra("tags")
         if (tags != null) {
@@ -135,19 +148,30 @@ class PicActivity : AppCompatActivity() {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!=
                 PackageManager.PERMISSION_GRANTED){
                     ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),1)
-                if (file_url != null) {
-                    if (file_ext != null) {
-                        savePic(file_url,file_ext)
-
-                    }
-                }
             }else{
                 if (file_url != null) {
                     if (file_ext != null) {
-                        savePic(file_url,file_ext)
+                        downloadAction(file_url,file_ext)
                     }
                 }
             }
+        }
+    }
+
+    private fun downloadAction(file_url:String,file_ext:String){
+        Toast.makeText(this,"开始保存",Toast.LENGTH_SHORT).show()
+        thread {
+            Looper.prepare()
+
+            if (downloadBinder.downloadPic(file_url,file_ext)){
+                Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show()
+                Log.w("Save","Saved")
+            }else{
+                Toast.makeText(this,"下载异常",Toast.LENGTH_SHORT).show()
+
+            }
+            Looper.loop()
+
         }
     }
 
@@ -183,7 +207,7 @@ class PicActivity : AppCompatActivity() {
                 if (grantResults.isNotEmpty() && grantResults[0]==PackageManager.PERMISSION_GRANTED){
                     if (file_url != null) {
                         if (file_ext != null) {
-                            savePic(file_url,file_ext)
+                            downloadAction(file_url,file_ext)
 
                         }
                     }
@@ -196,54 +220,57 @@ class PicActivity : AppCompatActivity() {
         }
     }
 
-    private fun savePic(file_url:String, end: String){
-        val FileD = File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/")
-        if (FileD.exists()) {
-            thread {
-                val file = File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/$time.$end")
-                val fos = FileOutputStream(file)
-                try {
-                    Looper.prepare()
-                    val fbtn =
-                        findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
-                            R.id.fbtn
-                        )
-
-                    Snackbar.make(fbtn, "开始保存", Snackbar.LENGTH_SHORT).show()
-                    val client = OkHttpClient()
-                    val request = Request.Builder()
-                        .url(file_url)
-                        .build()
-                    val response = client.newCall(request).execute()
-                    val responseData = response.body()?.bytes()
-                    if (response.code()==200) {
-                        fos.write(responseData)
-                        Snackbar.make(fbtn, "保存成功", Snackbar.LENGTH_SHORT).show()
-                    }
-
-                    else {
-                        Log.e("Test","errorNet")
-                        Snackbar.make(fbtn, "下载异常", Snackbar.LENGTH_SHORT).show()
-                        file.delete()
-                    }
-
-                    Looper.loop()
 
 
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                } finally {
-                    fos.close()
-                }
 
-            }
-        }
-        else{
-            FileD.mkdirs()
-            savePic(file_url,end)
-        }
-
-    }
+//    private fun savePic(file_url:String, end: String){
+//        val FileD = File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/")
+//        if (FileD.exists()) {
+//            thread {
+//                val file = File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/$time.$end")
+//                val fos = FileOutputStream(file)
+//                try {
+//                    Looper.prepare()
+//                    val fbtn =
+//                        findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
+//                            R.id.fbtn
+//                        )
+//
+//                    Snackbar.make(fbtn, "开始保存", Snackbar.LENGTH_SHORT).show()
+//                    val client = OkHttpClient()
+//                    val request = Request.Builder()
+//                        .url(file_url)
+//                        .build()
+//                    val response = client.newCall(request).execute()
+//                    val responseData = response.body()?.bytes()
+//                    if (response.code()==200) {
+//                        fos.write(responseData)
+//                        Snackbar.make(fbtn, "保存成功", Snackbar.LENGTH_SHORT).show()
+//                    }
+//
+//                    else {
+//                        Log.e("Test","errorNet")
+//                        Snackbar.make(fbtn, "下载异常", Snackbar.LENGTH_SHORT).show()
+//                        file.delete()
+//                    }
+//
+//                    Looper.loop()
+//
+//
+//                } catch (e: Exception) {
+//                    e.printStackTrace()
+//                } finally {
+//                    fos.close()
+//                }
+//
+//            }
+//        }
+//        else{
+//            FileD.mkdirs()
+//            savePic(file_url,end)
+//        }
+//
+//    }
 
     private fun loadPic(url:String){
         val glideUrl = GlideUrl(url, LazyHeaders.Builder().addHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36").build())
@@ -353,6 +380,21 @@ class PicActivity : AppCompatActivity() {
 
              }
          }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unbindService(connection)
+    }
+
+    private val connection = object : ServiceConnection{
+        override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
+            downloadBinder = p1 as DownloadService.DownloadBinder;
+        }
+
+        override fun onServiceDisconnected(p0: ComponentName?) {
+            TODO("Not yet implemented")
+        }
     }
 
 }
