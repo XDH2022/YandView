@@ -20,28 +20,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:background="?attr/colorAccent"
+            android:backgroundTint="?attr/colorAccent"
             android:layout_gravity="bottom|end"
+            app:tint="@android:color/white"
             android:src="@drawable/search"
-            android:contentDescription="TODO" />
+            android:contentDescription="Search" />
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+<!--        <com.google.android.material.appbar.AppBarLayout-->
+<!--            android:id="@+id/appbar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="?attr/actionBarSize">-->
 
-            <androidx.appcompat.widget.Toolbar
-                app:layout_scrollFlags="scroll|enterAlways|snap"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                android:id="@+id/toolbar"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+<!--            <androidx.appcompat.widget.Toolbar-->
+<!--                app:layout_scrollFlags="scroll|enterAlways|snap"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="?attr/actionBarSize"-->
+<!--                android:background="?attr/colorPrimary"-->
+<!--                app:titleTextColor="@color/white"-->
+<!--                android:id="@+id/toolbar"-->
+<!--            />-->
 
 
 
-        </com.google.android.material.appbar.AppBarLayout>
+<!--        </com.google.android.material.appbar.AppBarLayout>-->
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             app:layout_behavior="@string/appbar_scrolling_view_behavior"

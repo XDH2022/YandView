@@ -31,7 +31,8 @@
         <activity
             android:name=".pic.PicActivity"
             android:configChanges="uiMode" />
-        <activity android:name=".main.MainActivity">
+        <activity android:name=".main.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

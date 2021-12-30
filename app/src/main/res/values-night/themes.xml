@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.LspView" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme.LspView" parent="Theme.MaterialComponents.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/dark_main</item>
         <item name="colorPrimaryVariant">@color/dark_primary</item>
@@ -13,6 +13,11 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/dark_primary</item>
+        <item name="android:navigationBarColor" >?attr/colorPrimaryVariant</item>
+        <item name="actionBarTheme">@style/MyBarStyle</item>
+    </style>
 
+    <style name="MyBarStyle" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/white</item>
     </style>
 </resources>

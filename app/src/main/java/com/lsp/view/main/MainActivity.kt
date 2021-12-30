@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.text.Html
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -57,7 +58,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
         val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
             R.id.fbtn
         )
@@ -68,9 +68,14 @@ class MainActivity : AppCompatActivity() {
 
 
         search = findViewById<EditText>(R.id.search)
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
+
+//        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+//        setSupportActionBar(toolbar)
+
+
         //快捷搜索tag 来自PicActivity
+
+
         searchTag = intent.getStringExtra("searchTag")
 
 
@@ -275,7 +280,7 @@ class MainActivity : AppCompatActivity() {
                 )
                 Snackbar.make(fbtn,"请检查网络连接",Snackbar.LENGTH_LONG).show()
                 val handler = Handler()
-                handler.postDelayed({ loadPost(context, tags, page) },1000)
+                handler.postDelayed({ loadPost(context, tags, page) },3000)
             }
 
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
