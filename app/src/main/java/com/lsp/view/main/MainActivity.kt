@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -24,7 +23,6 @@ import com.lsp.view.bean.Post
 import com.hentai.yandeview.Retrofit.PostService
 import com.hentai.yandeview.Retrofit.ServiceCreator
 import com.lsp.view.R
-import com.lsp.view.login.LoginActivity
 import com.lsp.view.setting.SettingsActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -42,16 +40,22 @@ class MainActivity : AppCompatActivity() {
     private var isLoading = false
     private var nowPosition by Delegates.notNull<Int>()
     private var username:String? = ""
-
+    private lateinit var sourceUrl:Array<String>
+    private lateinit var sourceName:Array<String>
+    private lateinit var source:String
+    val TAG = javaClass.simpleName
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val configSp =  getSharedPreferences("config",0)
-        if (configSp.getString("source",null)==null){
-            configSp.edit().putString("source","https://yande.re/").apply()
+        sourceName = resources.getStringArray(R.array.pic_source)
+        sourceUrl = resources.getStringArray(R.array.url_source)
+        val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
+        if (configSp.getString("sourceName",null)==null){
+            configSp.edit().putString("sourceName","yande.re").apply()
             configSp.edit().putString("type","0").apply()
         }
+
 
 
         val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
@@ -107,7 +111,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         swipeRefreshLayout.setOnRefreshListener {
-            Log.e("Refresh", "Is refresh")
             postList.clear()
             nowPage = 1
             loadPost(this, searchTag,nowPage.toString())
@@ -127,9 +130,7 @@ class MainActivity : AppCompatActivity() {
                 //收藏夹
                 R.id.fav -> {
                     swipeRefreshLayout.isRefreshing=true
-                    Log.e("touch","touch1")
-                    Log.e("username",username.toString())
-                    Log.e("touch","touch2")
+                    Log.w(TAG,username.toString())
                     if (username == null) {
                         alterEditDialog()
                         postList.clear()
@@ -152,7 +153,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 //设置
-                R.id.settings -> {
+                R.id.setting -> {
                     val intent = Intent(this,SettingsActivity::class.java)
                     startActivity(intent)
                     drawerLayout.closeDrawers()
@@ -172,7 +173,7 @@ class MainActivity : AppCompatActivity() {
             .setTitle("请输入您的用户名")
             .setView(et)
             .setPositiveButton("确定") { _, _ ->
-                Log.e("edit",et.text.toString())
+                Log.w(TAG,et.text.toString())
                 val sharedPreferences = getSharedPreferences("username", 0).edit()
                 sharedPreferences.putString("username",et.text.toString()).apply()
             }.create().show()
@@ -245,11 +246,13 @@ class MainActivity : AppCompatActivity() {
      * @param page 页数
      */
     private fun loadPost(context: Context, tags: String?,page:String){
+        val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
+        for ((index,name) in sourceName.withIndex() ){
+            if (name == configSp.getString("sourceName",null)){
+                source = sourceUrl[index]
+            }
+        }
 
-        val configSp =  getSharedPreferences("config",0)
-        val source =  configSp.getString("source",null)
-        val tyep = configSp.getString("type",null)
-        Log.w("load",source.toString())
 
         nowPosition = postList.size-3
 
@@ -259,11 +262,11 @@ class MainActivity : AppCompatActivity() {
             ServiceCreator.create<PostService>("https://yande.re/")
         }
         var service:Call<List<Post>>
-        if (tyep.equals("0")){
-            service   =  postService.getPostData("100", tags,page)
-        }else{
-            service =  postService.getPostData_php("dapi","post","index","100",tags,"1",nowPage.toString())
-        }
+//        if (tyep.equals("0")){
+        service   =  postService.getPostData("100", tags,page)
+//        }else{
+//            service =  postService.getPostData_php("dapi","post","index","100",tags,"1",nowPage.toString())
+//        }
 
         service.enqueue(object : Callback<List<Post>> {
             override fun onFailure(call: Call<List<Post>>, t: Throwable) {
@@ -289,7 +292,7 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     swipeRefreshLayout.isRefreshing = false
                     Snackbar.make(swipeRefreshLayout,"只有这么多了哦",Snackbar.LENGTH_SHORT).show()
-                    Log.e("Post", "Is null")
+                    Log.w(TAG, "post is null")
                     return
                 }
 
@@ -299,7 +302,6 @@ class MainActivity : AppCompatActivity() {
                     findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerview)
                 recyclerView.layoutManager = layoutManager
 
-                Log.e("load",isLoading.toString())
                 if (isLoading){
                     recyclerView.scrollToPosition(nowPosition)
                     adapter.notifyDataSetChanged()

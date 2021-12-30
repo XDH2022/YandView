@@ -17,6 +17,10 @@
             android:name=".setting.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".setting.SettingsActivity_BackUp"
+            android:exported="false"
+            android:label="@string/title_activity_settings_backup" />
 
         <service
             android:name=".service.DownloadService"
