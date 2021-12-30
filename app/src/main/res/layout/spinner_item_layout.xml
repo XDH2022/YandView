@@ -6,4 +6,4 @@
     android:ellipsize="marquee"
     android:singleLine="true"
     android:textAlignment="inherit"
-    android:textSize="24sp"/>
+    android:textSize="20sp"/>

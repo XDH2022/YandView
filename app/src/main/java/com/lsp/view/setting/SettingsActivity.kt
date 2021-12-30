@@ -30,7 +30,7 @@ class SettingsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         val spinner = findViewById<Spinner>(R.id.source)
         //设置spinner列表
         val adapter = ArrayAdapter(this,R.layout.spinner_item_layout,name_sourceArray)
-        adapter.setDropDownViewResource(R.layout.spinner_item_layout)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
         spinner.onItemSelectedListener = this
 
@@ -49,12 +49,12 @@ class SettingsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         configSp.edit().putString("source",url_sourceArray[p2]).apply()
-        if (p2==2){
-            configSp.edit().putString("type","1").apply()
-        }else{
-            configSp.edit().putString("type","0").apply()
+//        if (p2==2){
+//            configSp.edit().putString("type","1").apply()
+//        }else{
+        configSp.edit().putString("type","0").apply()
 
-        }
+//        }
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

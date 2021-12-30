@@ -272,7 +272,7 @@ class MainActivity : AppCompatActivity() {
                 )
                 Snackbar.make(fbtn,"请检查网络连接",Snackbar.LENGTH_LONG).show()
                 val handler = Handler()
-                handler.postDelayed({ loadPost(context, tags, page) },5000)
+                handler.postDelayed({ loadPost(context, tags, page) },1000)
             }
 
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {

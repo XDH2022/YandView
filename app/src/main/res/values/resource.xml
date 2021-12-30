@@ -2,14 +2,14 @@
 <resources>
     <string-array name="pic_source">
         <item>yande.re</item>
-        <item>danbooru</item>
-        <item>gelbooru</item>
+<!--        <item>danbooru</item>-->
+<!--        <item>gelbooru</item>-->
         <item>konachan</item>
     </string-array>
     <string-array name="url_source">
         <item>https://yande.re/</item>
-        <item>https://danbooru.donmai.us/</item>
-        <item>https://gelbooru.com/</item>
+<!--        <item>https://danbooru.donmai.us/</item>-->
+<!--        <item>https://gelbooru.com/</item>-->
         <item>https://konachan.com/</item>
 
     </string-array>
