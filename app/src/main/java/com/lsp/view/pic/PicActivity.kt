@@ -7,17 +7,18 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.Environment
-import android.os.IBinder
-import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -62,14 +63,27 @@ class PicActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val window = getWindow();
+            window.clearFlags(
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                or  WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or  View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            or  View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setNavigationBarColor(Color.TRANSPARENT);
+        }
+
+
         setContentView(R.layout.activity_pic)
         val serviceIntent = Intent(this,DownloadService::class.java)
         bindService(serviceIntent,connection, Context.BIND_AUTO_CREATE)
 
         image =findViewById<ImageView>(R.id.titleImage)
         shortAnnotationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
-
-
         val intent = intent
         val tags = intent.getStringExtra("tags")
         if (tags != null) {

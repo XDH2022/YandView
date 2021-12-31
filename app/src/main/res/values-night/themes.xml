@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.LspView" parent="Theme.MaterialComponents.DayNight">
+    <style name="Theme.LspView.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/dark_main</item>
         <item name="colorPrimaryVariant">@color/dark_primary</item>

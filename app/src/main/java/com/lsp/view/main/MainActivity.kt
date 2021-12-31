@@ -4,17 +4,22 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.Html
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -33,6 +38,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
@@ -55,6 +61,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+
         sourceName = resources.getStringArray(R.array.pic_source)
         sourceUrl = resources.getStringArray(R.array.url_source)
         val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
@@ -75,8 +88,7 @@ class MainActivity : AppCompatActivity() {
 
         search = findViewById<EditText>(R.id.search)
 
-//        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-//        setSupportActionBar(toolbar)
+
 
 
         //快捷搜索tag 来自PicActivity
@@ -322,7 +334,11 @@ class MainActivity : AppCompatActivity() {
                 if (isLoading){
                     adapter.notifyData(postList,isRefresh)
                     recyclerView.adapter = SlideInBottomAnimationAdapter(adapter)
-                    recyclerView.scrollToPosition(position!!-3)
+                    try{
+                        recyclerView.scrollToPosition(position!!-3)
+                    }catch (e:Exception){
+                        e.printStackTrace()
+                    }
 
 //                    recyclerView.scrollToPosition(nowPosition-3)
                     Log.e("position",nowPosition.toString())
