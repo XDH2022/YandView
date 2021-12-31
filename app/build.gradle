@@ -11,8 +11,8 @@ android {
         applicationId "com.lsper.view"
         minSdkVersion 25
         targetSdkVersion 32
-        versionCode 1101
-        versionName "1.2.1"
+        versionCode 11010
+        versionName "1.2.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
