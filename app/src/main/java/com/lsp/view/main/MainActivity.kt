@@ -17,7 +17,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.lsp.view.bean.Post
@@ -25,6 +27,9 @@ import com.hentai.yandeview.Retrofit.PostService
 import com.hentai.yandeview.Retrofit.ServiceCreator
 import com.lsp.view.R
 import com.lsp.view.setting.SettingsActivity
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     private var nowPage = 1
     private lateinit var adapter: PostAdapter
     private var isLoading = false
-    private var nowPosition by Delegates.notNull<Int>()
+    private var nowPosition =0
     private var username:String? = ""
     private lateinit var sourceUrl:Array<String>
     private lateinit var sourceName:Array<String>
@@ -85,7 +90,7 @@ class MainActivity : AppCompatActivity() {
             searchAction(searchTag)
         }else{
             swipeRefreshLayout.isRefreshing = true
-            loadPost(this, null,nowPage.toString())
+            loadPost(this, null,nowPage.toString(),null)
         }
         val close = findViewById<View>(R.id.close)
         val editCard = findViewById<com.google.android.material.card.MaterialCardView>(R.id.editCard)
@@ -120,7 +125,7 @@ class MainActivity : AppCompatActivity() {
         swipeRefreshLayout.setOnRefreshListener {
             nowPage = 1
             isLoading = true
-            loadPost(this, searchTag,nowPage.toString())
+            loadPost(this, searchTag,nowPage.toString(),null)
         }
 
         //侧边栏
@@ -140,10 +145,10 @@ class MainActivity : AppCompatActivity() {
                     Log.w(TAG,username.toString())
                     if (username == null) {
                         alterEditDialog()
-                        loadPost(this,"vote:3:$username order:vote","1")
+                        loadPost(this,"vote:3:$username order:vote","1",null)
                         drawerLayout.closeDrawers()
                     }else{
-                        loadPost(this,"vote:3:$username order:vote","1")
+                        loadPost(this,"vote:3:$username order:vote","1",null)
                         drawerLayout.closeDrawers()
                     }
 
@@ -152,7 +157,7 @@ class MainActivity : AppCompatActivity() {
                 //画廊
                 R.id.photo ->{
                     swipeRefreshLayout.isRefreshing = true
-                    loadPost(this,null,"1")
+                    loadPost(this,null,"1",null)
                     drawerLayout.closeDrawers()
                     true
                 }
@@ -225,7 +230,7 @@ class MainActivity : AppCompatActivity() {
         )
         swipeRefreshLayout.isRefreshing = true
         isLoading = true
-        loadPost(this, tags,"1")
+        loadPost(this, tags,"1",null)
 
 
     }
@@ -241,7 +246,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.swipeRefreshLayout
                 )
             swipeRefreshLayout.isRefreshing = true
-            loadPost(this, searchTag, nowPage.toString())
+            loadPost(this, searchTag, nowPage.toString(),null)
         }
     }
 
@@ -253,7 +258,7 @@ class MainActivity : AppCompatActivity() {
      * @param tags 标签
      * @param page 页数
      */
-    private fun loadPost(context: Context, tags: String?,page:String){
+    private fun loadPost(context: Context, tags: String?,page:String,position:Int?){
         var postList:ArrayList<Post> = ArrayList()
         val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
         for ((index,name) in sourceName.withIndex() ){
@@ -284,7 +289,7 @@ class MainActivity : AppCompatActivity() {
                 )
                 Snackbar.make(fbtn,"请检查网络连接",Snackbar.LENGTH_LONG).show()
                 val handler = Handler()
-                handler.postDelayed({ loadPost(context, tags, page) },3000)
+                handler.postDelayed({ loadPost(context, tags, page,null) },3000)
             }
 
             override fun onResponse(call: Call<ArrayList<Post>>, response: Response<ArrayList<Post>>) {
@@ -296,7 +301,7 @@ class MainActivity : AppCompatActivity() {
 
                 if (list != null&&list.size>1) {
                     postList=list
-                    nowPosition = postList.size-3
+//                    nowPosition += postList.size
 
 
 //                    for ((i, post) in list.withIndex()) {
@@ -314,24 +319,30 @@ class MainActivity : AppCompatActivity() {
                 val recyclerView =
                     findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerview)
                 recyclerView.layoutManager = layoutManager
-
                 if (isLoading){
                     adapter.notifyData(postList,isRefresh)
-                    recyclerView.scrollToPosition(nowPosition)
+                    recyclerView.adapter = SlideInBottomAnimationAdapter(adapter)
+                    recyclerView.scrollToPosition(position!!-3)
+
+//                    recyclerView.scrollToPosition(nowPosition-3)
                     Log.e("position",nowPosition.toString())
                     isRefresh = true
                     isLoading = false
+
                 }else{
                     adapter = PostAdapter(context, postList)
-                    recyclerView.adapter = adapter
+                    recyclerView.adapter = SlideInBottomAnimationAdapter(adapter)
+
+
                 }
                 adapter.setLoadMoreListener(object : PostAdapter.OnLoadMoreListener{
                     override fun loadMore(position: Int) {
+                        Log.e("nowP",position.toString())
                         nowPage++
                         swipeRefreshLayout.isRefreshing = true
                         isLoading = true
                         isRefresh = false
-                        loadPost(this@MainActivity,tags,nowPage.toString())
+                        loadPost(this@MainActivity,tags,nowPage.toString(),position)
                     }
 
                 })

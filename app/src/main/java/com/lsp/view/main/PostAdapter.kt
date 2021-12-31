@@ -63,7 +63,7 @@ class PostAdapter(val context:Context, private var postList: ArrayList<Post>) :R
         }else{
             val position = postList.size
             postList.addAll(newPostList)
-            notifyItemInserted(position)
+            notifyItemInserted(0)
 
         }
 
