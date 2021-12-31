@@ -31,7 +31,6 @@ import retrofit2.Response
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
-    private val postList:ArrayList<Post> = ArrayList()
     private var searchTag:String? = null
     private lateinit var search:EditText
     private lateinit var searchBar:LinearLayout
@@ -45,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sourceName:Array<String>
     private lateinit var source:String
     private  var nowSourceName: String?=null
+    private var isRefresh=true
     val TAG = javaClass.simpleName
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,7 +118,6 @@ class MainActivity : AppCompatActivity() {
 
         //刷新
         swipeRefreshLayout.setOnRefreshListener {
-            postList.clear()
             nowPage = 1
             isLoading = true
             loadPost(this, searchTag,nowPage.toString())
@@ -141,11 +140,9 @@ class MainActivity : AppCompatActivity() {
                     Log.w(TAG,username.toString())
                     if (username == null) {
                         alterEditDialog()
-                        postList.clear()
                         loadPost(this,"vote:3:$username order:vote","1")
                         drawerLayout.closeDrawers()
                     }else{
-                        postList.clear()
                         loadPost(this,"vote:3:$username order:vote","1")
                         drawerLayout.closeDrawers()
                     }
@@ -155,7 +152,6 @@ class MainActivity : AppCompatActivity() {
                 //画廊
                 R.id.photo ->{
                     swipeRefreshLayout.isRefreshing = true
-                    postList.clear()
                     loadPost(this,null,"1")
                     drawerLayout.closeDrawers()
                     true
@@ -228,7 +224,6 @@ class MainActivity : AppCompatActivity() {
             R.id.swipeRefreshLayout
         )
         swipeRefreshLayout.isRefreshing = true
-        postList.clear()
         isLoading = true
         loadPost(this, tags,"1")
 
@@ -246,8 +241,6 @@ class MainActivity : AppCompatActivity() {
                     R.id.swipeRefreshLayout
                 )
             swipeRefreshLayout.isRefreshing = true
-
-            postList.clear()
             loadPost(this, searchTag, nowPage.toString())
         }
     }
@@ -261,6 +254,7 @@ class MainActivity : AppCompatActivity() {
      * @param page 页数
      */
     private fun loadPost(context: Context, tags: String?,page:String){
+        var postList:ArrayList<Post> = ArrayList()
         val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
         for ((index,name) in sourceName.withIndex() ){
             if (name == configSp.getString("sourceName",null)){
@@ -270,22 +264,21 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        nowPosition = postList.size-3
 
         val postService: PostService = if(source!=null){
             ServiceCreator.create<PostService>(source)
         }else {
             ServiceCreator.create<PostService>("https://yande.re/")
         }
-        var service:Call<List<Post>>
+        var service:Call<ArrayList<Post>>
 //        if (tyep.equals("0")){
         service   =  postService.getPostData("100", tags,page)
 //        }else{
 //            service =  postService.getPostData_php("dapi","post","index","100",tags,"1",nowPage.toString())
 //        }
 
-        service.enqueue(object : Callback<List<Post>> {
-            override fun onFailure(call: Call<List<Post>>, t: Throwable) {
+        service.enqueue(object : Callback<ArrayList<Post>> {
+            override fun onFailure(call: Call<ArrayList<Post>>, t: Throwable) {
                 val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
                     R.id.fbtn
                 )
@@ -294,7 +287,7 @@ class MainActivity : AppCompatActivity() {
                 handler.postDelayed({ loadPost(context, tags, page) },3000)
             }
 
-            override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
+            override fun onResponse(call: Call<ArrayList<Post>>, response: Response<ArrayList<Post>>) {
                 val swipeRefreshLayout =
                     findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
                         R.id.swipeRefreshLayout
@@ -302,9 +295,13 @@ class MainActivity : AppCompatActivity() {
                 val list = response.body()
 
                 if (list != null&&list.size>1) {
-                    for ((i, post) in list.withIndex()) {
-                            postList.add(post)
-                    }
+                    postList=list
+                    nowPosition = postList.size-3
+
+
+//                    for ((i, post) in list.withIndex()) {
+//                            postList.add(post)
+//                    }
                 } else {
                     swipeRefreshLayout.isRefreshing = false
                     Snackbar.make(swipeRefreshLayout,"只有这么多了哦",Snackbar.LENGTH_SHORT).show()
@@ -319,8 +316,10 @@ class MainActivity : AppCompatActivity() {
                 recyclerView.layoutManager = layoutManager
 
                 if (isLoading){
+                    adapter.notifyData(postList,isRefresh)
                     recyclerView.scrollToPosition(nowPosition)
-                    adapter.notifyDataSetChanged()
+                    Log.e("position",nowPosition.toString())
+                    isRefresh = true
                     isLoading = false
                 }else{
                     adapter = PostAdapter(context, postList)
@@ -331,6 +330,7 @@ class MainActivity : AppCompatActivity() {
                         nowPage++
                         swipeRefreshLayout.isRefreshing = true
                         isLoading = true
+                        isRefresh = false
                         loadPost(this@MainActivity,tags,nowPage.toString())
                     }
 

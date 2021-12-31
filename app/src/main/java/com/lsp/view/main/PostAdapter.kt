@@ -15,7 +15,7 @@ import com.lsp.view.bean.Post
 import com.lsp.view.pic.PicActivity
 import com.lsp.view.R
 
-class PostAdapter(val context:Context, private val postList: List<Post>) :RecyclerView.Adapter<PostAdapter.ViewHolder>(){
+class PostAdapter(val context:Context, private var postList: ArrayList<Post>) :RecyclerView.Adapter<PostAdapter.ViewHolder>(){
     inner class ViewHolder(view: View) :RecyclerView.ViewHolder(view){
         val picImage: ImageView = view.findViewById<ImageView>(R.id.picImgae)
 
@@ -52,6 +52,23 @@ class PostAdapter(val context:Context, private val postList: List<Post>) :Recycl
         this.mLoadMoreListener = mLoadMoreListener
 
     }
+
+    fun notifyData(newPostList: ArrayList<Post>, isRefresh:Boolean){
+        if (isRefresh){
+            postList.clear()
+            notifyItemRangeRemoved(0, postList.size);
+            postList = newPostList
+            notifyItemRangeInserted(0, newPostList.size)
+
+        }else{
+            val position = postList.size
+            postList.addAll(newPostList)
+            notifyItemInserted(position)
+
+        }
+
+    }
+
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val post = postList[position]
