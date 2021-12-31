@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sourceUrl:Array<String>
     private lateinit var sourceName:Array<String>
     private lateinit var source:String
+    private  var nowSourceName: String?=null
     val TAG = javaClass.simpleName
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,9 +116,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        //刷新
         swipeRefreshLayout.setOnRefreshListener {
             postList.clear()
             nowPage = 1
+            isLoading = true
             loadPost(this, searchTag,nowPage.toString())
         }
 
@@ -226,6 +229,7 @@ class MainActivity : AppCompatActivity() {
         )
         swipeRefreshLayout.isRefreshing = true
         postList.clear()
+        isLoading = true
         loadPost(this, tags,"1")
 
 
@@ -233,13 +237,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val swipeRefreshLayout = findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
-            R.id.swipeRefreshLayout
-        )
-        swipeRefreshLayout.isRefreshing = true
+        val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
+        val saveName =  configSp.getString("sourceName",null)
+        if (saveName!=nowSourceName) {
 
-        postList.clear()
-        loadPost(this,searchTag,nowPage.toString())
+            val swipeRefreshLayout =
+                findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
+                    R.id.swipeRefreshLayout
+                )
+            swipeRefreshLayout.isRefreshing = true
+
+            postList.clear()
+            loadPost(this, searchTag, nowPage.toString())
+        }
     }
 
 
@@ -254,6 +264,7 @@ class MainActivity : AppCompatActivity() {
         val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
         for ((index,name) in sourceName.withIndex() ){
             if (name == configSp.getString("sourceName",null)){
+                nowSourceName = configSp.getString("sourceName",null)
                 source = sourceUrl[index]
             }
         }
@@ -314,7 +325,6 @@ class MainActivity : AppCompatActivity() {
                 }else{
                     adapter = PostAdapter(context, postList)
                     recyclerView.adapter = adapter
-
                 }
                 adapter.setLoadMoreListener(object : PostAdapter.OnLoadMoreListener{
                     override fun loadMore(position: Int) {
