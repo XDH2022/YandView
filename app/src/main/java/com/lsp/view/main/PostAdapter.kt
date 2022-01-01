@@ -55,18 +55,18 @@ class PostAdapter(val context:Context, private var postList: ArrayList<Post>) :R
     }
 
     fun notifyData(newPostList: ArrayList<Post>, isRefresh:Boolean){
+        Log.e("isRefresh",isRefresh.toString())
         if (isRefresh){
-            postList.clear()
             notifyItemRangeRemoved(0, postList.size);
             postList = newPostList
             notifyItemRangeInserted(0, newPostList.size)
 
         }else{
-            val position = postList.size
             postList.addAll(newPostList)
             notifyItemInserted(0)
 
         }
+        Log.e("size",postList.size.toString())
 
     }
 

@@ -143,7 +143,8 @@ class MainActivity : AppCompatActivity() {
         fbtn.setOnClickListener {
 
             if (barShow){
-                searchAction(search.text.toString())
+                searchTag = search.text.toString()
+                searchAction(searchTag)
                 hiddenSearchBar()
                 hideIm(search)
 
@@ -371,10 +372,11 @@ class MainActivity : AppCompatActivity() {
                     return
                 }
 
-
+                adapter = PostAdapter(context, postList)
+                recyclerView.adapter = SlideInBottomAnimationAdapter(adapter)
                 if (isLoading){
+                    Log.e("length",postList.size.toString())
                     adapter.notifyData(postList,isRefresh)
-                    recyclerView.adapter = SlideInBottomAnimationAdapter(adapter)
                     try{
                         if (position!=null) {
                             if (position > 10) {
@@ -387,10 +389,6 @@ class MainActivity : AppCompatActivity() {
 
                     isRefresh = true
                     isLoading = false
-
-                }else{
-                    adapter = PostAdapter(context, postList)
-                    recyclerView.adapter = SlideInBottomAnimationAdapter(adapter)
 
 
                 }
