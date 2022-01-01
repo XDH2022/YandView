@@ -234,6 +234,8 @@ class MainActivity : AppCompatActivity() {
                     searchBar.visibility = View.GONE
                 }
             })
+        barShow = false
+
     }
     //现实搜索栏
     private fun showSearchBar(){
@@ -273,6 +275,7 @@ class MainActivity : AppCompatActivity() {
                 configSp.edit().putBoolean("safeMode",false).apply()
                 safeMode = false
                 Toast.makeText(this,"打开新世界的大门",Toast.LENGTH_SHORT).show()
+                return
             }
 
         }
