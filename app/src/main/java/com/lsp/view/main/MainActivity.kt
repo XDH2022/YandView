@@ -61,6 +61,8 @@ class MainActivity : AppCompatActivity() {
     private  lateinit var layoutManager: RecyclerView.LayoutManager
     private var safeMode = true //安全模式
     private lateinit var recyclerView:RecyclerView
+    private var barShow = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,6 +151,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         fbtn.setOnClickListener {
+
+            if (barShow){
+                if (search.text.toString()!="") {
+                    searchAction(search.text.toString())
+                    hiddenSearchBar()
+                    hideIm()
+                }else{
+                    hiddenSearchBar()
+                }
+            }
+
             if (searchBar.visibility == View.GONE) {
                 showSearchBar()
             }
@@ -238,6 +251,7 @@ class MainActivity : AppCompatActivity() {
     }
     //现实搜索栏
     private fun showSearchBar(){
+
         searchBar.apply {
             alpha = 0f
             visibility = View.VISIBLE
@@ -246,6 +260,7 @@ class MainActivity : AppCompatActivity() {
                 .setDuration(shortAnnotationDuration.toLong())
                 .setListener(null)
         }
+        barShow = true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

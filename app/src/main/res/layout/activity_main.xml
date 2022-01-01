@@ -26,6 +26,7 @@
             android:layout_gravity="bottom|end"
             android:backgroundTint="?android:colorAccent"
             app:tint="@android:color/white"
+            android:elevation="5dp"
             android:src="@drawable/search"
             android:contentDescription="Search" />
 
@@ -77,11 +78,13 @@
             android:layout_width="0dp"
             android:layout_weight="20"
             android:elevation="15dp"
-            app:cardCornerRadius="5dp"
+            app:cardCornerRadius="3dp"
             android:id="@+id/editCard"
             android:layout_marginTop="60dp"
             android:layout_height="wrap_content">
             <EditText
+
+                android:background="@null"
                 android:hint="搜索..."
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
