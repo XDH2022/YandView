@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -22,9 +23,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.SimpleItemAnimator
+import androidx.recyclerview.widget.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.lsp.view.bean.Post
@@ -59,7 +58,9 @@ class MainActivity : AppCompatActivity() {
     private  var nowSourceName: String?=null
     private var isRefresh=true
     val TAG = javaClass.simpleName
+    private  lateinit var layoutManager: RecyclerView.LayoutManager
     private var safeMode = true //安全模式
+    private lateinit var recyclerView:RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,6 +92,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        layoutManager = GridLayoutManager(this, 2)
+        recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerview)
+        if (getResources().getConfiguration().orientation!=Configuration.ORIENTATION_PORTRAIT){
+            layoutManager = LinearLayoutManager(this)
+            (layoutManager as LinearLayoutManager).orientation = LinearLayoutManager.HORIZONTAL
+        }
+
+        recyclerView.layoutManager = layoutManager
+
 
         val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
             R.id.fbtn
@@ -102,10 +112,6 @@ class MainActivity : AppCompatActivity() {
 
 
         search = findViewById<EditText>(R.id.search)
-
-
-
-
         //快捷搜索tag 来自PicActivity
 
 
@@ -349,10 +355,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
 
-                val layoutManager = GridLayoutManager(context, 2)
-                val recyclerView =
-                    findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerview)
-                recyclerView.layoutManager = layoutManager
                 if (isLoading){
                     adapter.notifyData(postList,isRefresh)
                     recyclerView.adapter = SlideInBottomAnimationAdapter(adapter)
