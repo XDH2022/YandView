@@ -1,7 +1,10 @@
 package com.lsp.view.service
 
 import android.app.Service
+import android.content.Context
 import android.content.Intent
+import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Binder
 import android.os.Environment
 import android.os.IBinder
@@ -19,9 +22,9 @@ import java.lang.Exception
 import kotlin.concurrent.thread
 
 class DownloadService : Service() {
-    private val mBinder = DownloadBinder();
+    private val mBinder = DownloadBinder(this);
 
-    class DownloadBinder:Binder(){
+    class DownloadBinder(val context: Context):Binder(){
         fun downloadPic(file_url:String, end: String): Boolean {
             val time = System.currentTimeMillis()
 
@@ -39,6 +42,11 @@ class DownloadService : Service() {
                         val responseData = response.body()?.bytes()
                         if (response.code()==200) {
                             fos.write(responseData)
+
+                            //通知媒体更新
+                            MediaScannerConnection.scanFile(context, arrayOf(FileD.toString()),
+                                arrayOf(FileD.name.toString()),null)
+
                             return true
 
                         }else {
