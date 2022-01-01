@@ -26,8 +26,9 @@ class PostAdapter(val context:Context, private var postList: ArrayList<Post>) :R
         val viewHolder = ViewHolder(view)
         viewHolder.picImage.setOnClickListener {
             val position = viewHolder.adapterPosition
-            Log.e("position",position.toString())
-            Log.e("url",postList[position].sample_url)
+            Log.w("position",position.toString())
+            Log.w("url",postList[position].sample_url)
+            Log.w("rating",postList[position].rating)
             val intent = Intent(context, PicActivity::class.java)
             intent.putExtra("id",postList[position].id)
             intent.putExtra("sample_url",postList[position].sample_url)

@@ -39,6 +39,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
@@ -57,16 +59,15 @@ class MainActivity : AppCompatActivity() {
     private  var nowSourceName: String?=null
     private var isRefresh=true
     val TAG = javaClass.simpleName
+    private var safeMode = true //安全模式
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
 
-
-
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-
 
         sourceName = resources.getStringArray(R.array.pic_source)
         sourceUrl = resources.getStringArray(R.array.url_source)
@@ -74,6 +75,20 @@ class MainActivity : AppCompatActivity() {
         if (configSp.getString("sourceName",null)==null){
             configSp.edit().putString("sourceName","yande.re").apply()
             configSp.edit().putString("type","0").apply()
+        }
+
+        //安全模式验证
+        safeMode =configSp.getBoolean("safeMode",true)
+        var verify = 0
+        toolbar.setOnClickListener {
+            if (safeMode){
+                verify++
+                if (verify>10){
+                    configSp.edit().putBoolean("safeMode",false).apply()
+                    safeMode = false
+                    Toast.makeText(this,"打开新世界的大门",Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
 
@@ -153,6 +168,8 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId){
                 //收藏夹
                 R.id.fav -> {
+
+
                     swipeRefreshLayout.isRefreshing=true
                     Log.w(TAG,username.toString())
                     if (username == null) {
@@ -187,6 +204,9 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+
+
     //弹出键入用户名对话框
     private fun alterEditDialog(){
         val et = EditText(this)
@@ -312,13 +332,15 @@ class MainActivity : AppCompatActivity() {
                 val list = response.body()
 
                 if (list != null&&list.size>1) {
-                    postList=list
-//                    nowPosition += postList.size
-
-
-//                    for ((i, post) in list.withIndex()) {
-//                            postList.add(post)
-//                    }
+                    if (safeMode){
+                        for (post in list){
+                            if (post.rating!="e"){
+                                postList.add(post)
+                            }
+                        }
+                    }else{
+                        postList = list
+                    }
                 } else {
                     swipeRefreshLayout.isRefreshing = false
                     Snackbar.make(swipeRefreshLayout,"只有这么多了哦",Snackbar.LENGTH_SHORT).show()
@@ -335,13 +357,15 @@ class MainActivity : AppCompatActivity() {
                     adapter.notifyData(postList,isRefresh)
                     recyclerView.adapter = SlideInBottomAnimationAdapter(adapter)
                     try{
-                        recyclerView.scrollToPosition(position!!-3)
+                        if (position!=null) {
+                            if (position > 10) {
+                                recyclerView.scrollToPosition(position - 3)
+                            }
+                        }
                     }catch (e:Exception){
                         e.printStackTrace()
                     }
 
-//                    recyclerView.scrollToPosition(nowPosition-3)
-                    Log.e("position",nowPosition.toString())
                     isRefresh = true
                     isLoading = false
 
@@ -353,7 +377,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 adapter.setLoadMoreListener(object : PostAdapter.OnLoadMoreListener{
                     override fun loadMore(position: Int) {
-                        Log.e("nowP",position.toString())
+                        Log.w("nowP",position.toString())
                         nowPage++
                         swipeRefreshLayout.isRefreshing = true
                         isLoading = true
@@ -371,4 +395,5 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
 }

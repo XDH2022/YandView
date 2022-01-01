@@ -245,7 +245,6 @@ class PicActivity : AppCompatActivity() {
                 isFirstResource: Boolean
             ): Boolean {
                 val pb = findViewById<ProgressBar>(R.id.pb)
-                Log.e("erroe",e.toString())
                 Snackbar.make(pb, "加载错误", Snackbar.LENGTH_LONG).setAction("查看Log") {
                     AlertDialog.Builder(this@PicActivity).apply {
                         setTitle("Log")
