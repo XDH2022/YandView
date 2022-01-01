@@ -12,9 +12,27 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="colorAccent">@color/dark_primary</item>
+        <item name="colorAccent">@color/dark_accent</item>
         <item name="android:navigationBarColor" >?attr/colorPrimaryVariant</item>
         <item name="actionBarTheme">@style/MyBarStyle</item>
+
+    </style>
+    <style name="Theme.LspView.NoActionBar.Pic" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/dark_main</item>
+        <item name="colorPrimaryVariant">@color/dark_primary</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/primary</item>
+        <item name="colorSecondaryVariant">@color/primary</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/dark_accent</item>
+        <item name="android:navigationBarColor" >?attr/colorPrimaryVariant</item>
+        <item name="actionBarTheme">@style/MyBarStyle</item>
+
     </style>
 
     <style name="MyBarStyle" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">

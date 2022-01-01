@@ -15,6 +15,7 @@
         android:layout_width="match_parent"
         android:fitsSystemWindows="true"
         android:layout_height="match_parent"
+        android:background="?android:colorBackground"
         android:id="@+id/appbar">
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/ctl"
@@ -100,7 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         app:tint="@android:color/white"
-        android:backgroundTint="?attr/colorAccent"
+        android:backgroundTint="?android:colorAccent"
         android:layout_margin="16dp"
         android:contentDescription="Download"
         android:id="@+id/fbtn"/>
