@@ -83,17 +83,6 @@ class MainActivity : AppCompatActivity() {
 
         //安全模式验证
         safeMode =configSp.getBoolean("safeMode",true)
-        var verify = 0
-        toolbar.setOnClickListener {
-            if (safeMode){
-                verify++
-                if (verify>10){
-                    configSp.edit().putBoolean("safeMode",false).apply()
-                    safeMode = false
-                    Toast.makeText(this,"打开新世界的大门",Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
 
         layoutManager = GridLayoutManager(this, 2)
         recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerview)
@@ -279,12 +268,24 @@ class MainActivity : AppCompatActivity() {
     }
     //执行搜索
     private fun searchAction(tags: String?) {
-        val swipeRefreshLayout = findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
-            R.id.swipeRefreshLayout
-        )
+        if (safeMode){
+            if (tags.equals("&safeMode=false")){
+                val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
+                configSp.edit().putBoolean("safeMode",false).apply()
+                safeMode = false
+                Toast.makeText(this,"打开新世界的大门",Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
+        val swipeRefreshLayout =
+            findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
+                R.id.swipeRefreshLayout
+            )
         swipeRefreshLayout.isRefreshing = true
         isLoading = true
-        loadPost(this, tags,"1",null)
+        loadPost(this, tags, "1", null)
+
 
 
     }
