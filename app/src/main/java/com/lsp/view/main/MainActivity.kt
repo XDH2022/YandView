@@ -38,6 +38,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
+import java.security.AccessController.getContext
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
@@ -153,13 +154,10 @@ class MainActivity : AppCompatActivity() {
         fbtn.setOnClickListener {
 
             if (barShow){
-                if (search.text.toString()!="") {
-                    searchAction(search.text.toString())
-                    hiddenSearchBar()
-                    hideIm()
-                }else{
-                    hiddenSearchBar()
-                }
+                searchAction(search.text.toString())
+                hiddenSearchBar()
+                hideIm(search)
+
             }
 
             if (searchBar.visibility == View.GONE) {
@@ -272,9 +270,12 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun hideIm(){
-        val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
+    private fun hideIm( v: View){
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+
+        if (imm.isActive) {
+            imm.hideSoftInputFromWindow(v.applicationWindowToken,0)
+        }
     }
     //执行搜索
     private fun searchAction(tags: String?) {
