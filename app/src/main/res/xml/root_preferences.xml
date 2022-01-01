@@ -8,7 +8,7 @@
             app:entries="@array/pic_source"
             app:entryValues="@array/pic_source"
             app:key="sourceName"
-            app:title="Change the source"
+            app:title="选择源"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
