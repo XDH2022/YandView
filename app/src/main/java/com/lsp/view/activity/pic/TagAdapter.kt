@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lsp.view.R
@@ -43,6 +44,13 @@ class TagAdapter(val tagList:List<Tags>,val context: Context):RecyclerView.Adapt
                 val tagListType = object :TypeToken<ArrayList<Tags>>(){}.type
                 tagsArray = Gson().fromJson(tagsArrayJson,tagListType)
             }
+            for (tag:Tags in tagsArray){
+                if (tag.tag == viewHolder.tagText.text.toString()){
+                    Toast.makeText(context,"收藏过了哦",Toast.LENGTH_SHORT).show()
+                    return@setOnLongClickListener true
+                }
+            }
+
             tagsArray.add(Tags(viewHolder.tagText.text.toString()))
             tagsArraySp.edit().putString("array",Gson().toJson(tagsArray)).apply()
             Toast.makeText(context,"收藏了新标签",Toast.LENGTH_SHORT).show()
