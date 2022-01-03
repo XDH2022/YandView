@@ -1,4 +1,4 @@
-package com.lsp.view.setting
+package com.lsp.view.activity.setting
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import com.lsp.view.R
-import java.util.*
 
 class SettingsActivity_BackUp : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 

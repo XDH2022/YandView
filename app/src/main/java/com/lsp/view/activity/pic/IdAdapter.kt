@@ -1,4 +1,4 @@
-package com.lsp.view.pic
+package com.lsp.view.activity.pic
 
 import android.view.LayoutInflater
 import android.view.View

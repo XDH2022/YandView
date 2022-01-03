@@ -16,11 +16,14 @@
         <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.19635416666666666" />
         <entry key="app/src/main/res/drawable/item_bg.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/drawable/title_bg.xml" value="0.3333333333333333" />
+        <entry key="app/src/main/res/layout/activity_fav_tag.xml" value="0.3066123188405797" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.21770833333333334" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4" />
         <entry key="app/src/main/res/layout/activity_pic.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/img_item_layout.xml" value="0.3066123188405797" />
         <entry key="app/src/main/res/layout/item_layout.xml" value="0.1625" />
         <entry key="app/src/main/res/layout/nav_header.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/nav_tag_item_layout.xml" value="0.3129528985507246" />
         <entry key="app/src/main/res/layout/settings_activity.xml" value="0.264" />
         <entry key="app/src/main/res/layout/settings_activity_2.xml" value="0.2595108695652174" />
         <entry key="app/src/main/res/layout/settings_activity_backup.xml" value="0.25181159420289856" />
@@ -28,6 +31,7 @@
         <entry key="app/src/main/res/layout/spinner_item_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/tag_item_layout.xml" value="0.31302083333333336" />
         <entry key="app/src/main/res/menu/nav_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/nav_tags.xml" value="0.1" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/xml/root_preferences.xml" value="0.21829710144927536" />

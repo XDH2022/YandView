@@ -9,10 +9,10 @@
             android:id="@+id/fav"
             android:icon="@drawable/ic_baseline_favorite_24"
             android:title="Favorite"/>
-<!--        <item-->
-<!--            android:id="@+id/taglist"-->
-<!--            android:icon="@drawable/ic_baseline_label_24"-->
-<!--            android:title="Tags"/>-->
+        <item
+            android:id="@+id/taglist"
+            android:icon="@drawable/ic_baseline_label_24"
+            android:title="FavTags"/>
         <item
             android:id="@+id/setting"
             android:icon="@drawable/setting_icon"

@@ -1,4 +1,4 @@
-package com.lsp.view.main
+package com.lsp.view.activity.main
 
 import android.content.Context
 import android.content.Intent
@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.lsp.view.bean.Post
-import com.lsp.view.pic.PicActivity
+import com.lsp.view.activity.pic.PicActivity
 import com.lsp.view.R
 
 class PostAdapter(val context:Context, private var postList: ArrayList<Post>) :RecyclerView.Adapter<PostAdapter.ViewHolder>(){
@@ -22,7 +22,7 @@ class PostAdapter(val context:Context, private var postList: ArrayList<Post>) :R
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_layout,parent,false)
+        val view = LayoutInflater.from(context).inflate(R.layout.img_item_layout,parent,false)
         val viewHolder = ViewHolder(view)
         viewHolder.picImage.setOnClickListener {
             val position = viewHolder.adapterPosition
@@ -57,13 +57,13 @@ class PostAdapter(val context:Context, private var postList: ArrayList<Post>) :R
     fun notifyData(newPostList: ArrayList<Post>, isRefresh:Boolean){
         Log.e("isRefresh",isRefresh.toString())
         if (isRefresh){
-            notifyItemRangeRemoved(0, postList.size);
             postList = newPostList
             notifyItemRangeInserted(0, newPostList.size)
 
         }else{
+            val position = postList.size
             postList.addAll(newPostList)
-            notifyItemInserted(0)
+            notifyItemRangeInserted(position,postList.size)
 
         }
         Log.e("size",postList.size.toString())

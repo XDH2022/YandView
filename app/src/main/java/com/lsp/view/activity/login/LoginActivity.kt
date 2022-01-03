@@ -1,21 +1,13 @@
-package com.lsp.view.login
+package com.lsp.view.activity.login
 
-import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
 import android.widget.EditText
-import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.lsp.view.R
-import com.lsp.view.main.MainActivity
+import com.lsp.view.activity.main.MainActivity
 import okhttp3.*
-import java.io.File
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import java.util.ArrayList
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread

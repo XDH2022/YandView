@@ -1,20 +1,15 @@
-package com.lsp.view.main
+package com.lsp.view.activity.main
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.text.Html
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
@@ -26,22 +21,23 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.lsp.view.bean.Post
 import com.hentai.yandeview.Retrofit.PostService
 import com.hentai.yandeview.Retrofit.ServiceCreator
 import com.lsp.view.R
-import com.lsp.view.setting.SettingsActivity
-import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter
+import com.lsp.view.activity.favtag.FavTagActivity
+import com.lsp.view.activity.favtag.FavTagAdapter
+import com.lsp.view.bean.Tags
+import com.lsp.view.activity.setting.SettingsActivity
 import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
-import java.security.AccessController.getContext
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
     private var searchTag:String? = null
@@ -93,6 +89,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         recyclerView.layoutManager = layoutManager
+
+
+            //收藏Tag
+
+
+
+
+
+
 
 
         val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
@@ -202,6 +207,12 @@ class MainActivity : AppCompatActivity() {
                     drawerLayout.closeDrawers()
                     false
 
+                }
+                R.id.taglist -> {
+                    val intent = Intent(this,FavTagActivity::class.java)
+                    startActivity(intent)
+                    drawerLayout.closeDrawers()
+                    false
                 }
                 else -> false
             }
@@ -325,7 +336,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
         val postService: PostService = if(source!=null){
             ServiceCreator.create<PostService>(source)
         }else {
@@ -384,7 +394,7 @@ class MainActivity : AppCompatActivity() {
                     try{
                         if (position!=null) {
                             if (position > 4) {
-                                recyclerView.scrollToPosition(position - 2)
+                                recyclerView.scrollToPosition(position - 3)
                             }
                         }
                     }catch (e:Exception){

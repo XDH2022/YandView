@@ -1,4 +1,4 @@
-package com.lsp.view.pic
+package com.lsp.view.activity.pic
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -7,8 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.*
@@ -20,9 +18,7 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -40,15 +36,11 @@ import com.lsp.view.bean.Author
 import com.lsp.view.bean.ID
 import com.lsp.view.bean.Size
 import com.lsp.view.bean.Tags
-import com.lsp.view.main.MainActivity
+import com.lsp.view.activity.main.MainActivity
 import com.lsp.view.service.DownloadService
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import java.io.*
-import java.lang.Exception
 import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
-import kotlin.math.log
 import kotlin.properties.Delegates
 
 class PicActivity : AppCompatActivity() {
@@ -306,7 +298,7 @@ class PicActivity : AppCompatActivity() {
                  for (tag in list) run {
                      tagList.add(Tags(tag))
                  }
-                 val adapter = TagAdapter(tagList)
+                 val adapter = TagAdapter(tagList,this)
                  adapter.setOnItemClickListener(object : TagAdapter.OnItemClickListener{
                      override fun onItemClick(view: View, position: Int) {
                          val intent = Intent(this@PicActivity, MainActivity::class.java)

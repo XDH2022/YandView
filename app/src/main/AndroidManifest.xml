@@ -14,11 +14,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LspView.NoActionBar">
         <activity
-            android:name=".setting.SettingsActivity"
+            android:name=".activity.favtag.FavTagActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.setting.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".setting.SettingsActivity_BackUp"
+            android:name=".activity.setting.SettingsActivity_BackUp"
             android:exported="false"
             android:label="@string/title_activity_settings_backup" />
 
@@ -27,12 +30,13 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".login.LoginActivity" />
+        <activity android:name=".activity.login.LoginActivity" />
         <activity
-            android:theme="@style/Theme.LspView.NoActionBar.Pic"
-            android:name=".pic.PicActivity"
-            android:configChanges="uiMode" />
-        <activity android:name=".main.MainActivity"
+            android:name=".activity.pic.PicActivity"
+            android:configChanges="uiMode"
+            android:theme="@style/Theme.LspView.NoActionBar.Pic" />
+        <activity
+            android:name=".activity.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

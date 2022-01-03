@@ -1,4 +1,4 @@
-package com.lsp.view.login;
+package com.lsp.view.activity.login;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
