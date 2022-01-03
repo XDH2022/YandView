@@ -8,6 +8,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.*
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lsp.view.R
@@ -29,8 +30,6 @@ class FavTagActivity : AppCompatActivity() {
             val tagListType = object : TypeToken<ArrayList<Tags>>(){}.type
             favTagList = Gson().fromJson(array,tagListType)
 
-        }else{
-            favTagList.add(Tags("没有任何Tag"))
         }
 
         val favTagAdapter = FavTagAdapter(favTagList,this)
