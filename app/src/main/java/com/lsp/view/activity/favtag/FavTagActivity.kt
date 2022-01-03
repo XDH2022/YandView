@@ -33,7 +33,7 @@ class FavTagActivity : AppCompatActivity() {
             favTagList.add(Tags("没有任何Tag"))
         }
 
-        val favTagAdapter = FavTagAdapter(favTagList)
+        val favTagAdapter = FavTagAdapter(favTagList,this)
         favTagAdapter.setOnItemClickListener(object :FavTagAdapter.OnItemClickListener{
             override fun onItemClick(view: View, position: Int) {
                 val intent = Intent(this@FavTagActivity, MainActivity::class.java)

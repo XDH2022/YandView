@@ -1,14 +1,17 @@
 package com.lsp.view.activity.favtag
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.lsp.view.R
 import com.lsp.view.bean.Tags
 
-class FavTagAdapter(val tagList:ArrayList<Tags>): RecyclerView.Adapter<FavTagAdapter.ViewHolder>() {
+class FavTagAdapter(val tagList:ArrayList<Tags>,val context:Context): RecyclerView.Adapter<FavTagAdapter.ViewHolder>() {
     inner class ViewHolder(view:View):RecyclerView.ViewHolder(view) {
         val fav_tag = view.findViewById<TextView>(R.id.fav_tag)
 
@@ -29,6 +32,7 @@ class FavTagAdapter(val tagList:ArrayList<Tags>): RecyclerView.Adapter<FavTagAda
             val position = viewHolder.adapterPosition
             removeData(position)
 
+
             true
         }
         return viewHolder
@@ -37,6 +41,12 @@ class FavTagAdapter(val tagList:ArrayList<Tags>): RecyclerView.Adapter<FavTagAda
     fun removeData(position: Int){
         tagList.removeAt(position)
         notifyItemRangeInserted(0,tagList.size)
+        val tagsArraySp = context.getSharedPreferences("tags_sp",Context.MODE_PRIVATE)
+        val tagsArrayJson = tagsArraySp.getString("array",null)
+        val tagListType = object : TypeToken<ArrayList<Tags>>(){}.type
+        val tagArray:ArrayList<Tags> = Gson().fromJson(tagsArrayJson,tagListType)
+        tagArray.removeAt(position)
+        tagsArraySp.edit().putString("array",Gson().toJson(tagArray)).apply()
 
     }
 
