@@ -38,6 +38,8 @@ import com.lsp.view.bean.Size
 import com.lsp.view.bean.Tags
 import com.lsp.view.activity.main.MainActivity
 import com.lsp.view.service.DownloadService
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.*
 import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
@@ -229,8 +231,8 @@ class PicActivity : AppCompatActivity() {
     }
 
     private fun loadPic(url:String){
-        val glideUrl = GlideUrl(url, LazyHeaders.Builder().addHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36").build())
 
+        val glideUrl = GlideUrl(url, LazyHeaders.Builder().addHeader("User-Agent","Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36").build())
         Glide.with(this).load(glideUrl).listener(object :RequestListener<Drawable?>{
             override fun onLoadFailed(
                 e: GlideException?,
@@ -238,11 +240,16 @@ class PicActivity : AppCompatActivity() {
                 target: Target<Drawable?>?,
                 isFirstResource: Boolean
             ): Boolean {
+                if (e != null) {
+                    Log.e("Pic",e.stackTraceToString())
+                }
                 val pb = findViewById<ProgressBar>(R.id.pb)
                 Snackbar.make(pb, "加载错误", Snackbar.LENGTH_LONG).setAction("查看Log") {
                     AlertDialog.Builder(this@PicActivity).apply {
                         setTitle("Log")
-                        setMessage(e.toString())
+                        if (e != null) {
+                            setMessage(e.stackTraceToString())
+                        }
                         setNegativeButton("确定", null)
                         create()
                         show()

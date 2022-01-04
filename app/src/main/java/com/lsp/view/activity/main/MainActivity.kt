@@ -133,6 +133,7 @@ class MainActivity : AppCompatActivity() {
         shortAnnotationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
         close.setOnClickListener {
             hiddenSearchBar()
+            hideIm(close)
         }
 
         search.setOnEditorActionListener { v, actionId, event ->
@@ -198,6 +199,7 @@ class MainActivity : AppCompatActivity() {
                     swipeRefreshLayout.isRefreshing = true
                     loadPost(this,null,"1",null,false,true)
                     drawerLayout.closeDrawers()
+                    search.setText("")
                     true
                 }
                 //设置
