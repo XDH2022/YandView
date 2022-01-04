@@ -278,10 +278,9 @@ class PicActivity : AppCompatActivity() {
                 return false
             }
         }
-        manager.flexWrap = FlexWrap.WRAP
-        manager.flexDirection = FlexDirection.ROW
         manager.alignItems = AlignItems.CENTER
         manager.justifyContent = JustifyContent.FLEX_START
+
         return manager
     }
 
