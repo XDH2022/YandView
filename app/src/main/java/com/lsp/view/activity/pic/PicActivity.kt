@@ -293,7 +293,7 @@ class PicActivity : AppCompatActivity() {
 
     //设置tags列表
     //这写的很烂 得改
-     private  fun  loadTags(tags:String,type){
+     private  fun  loadTags(tags:String,type:String){
 
          when(type){
              "tags" ->{
