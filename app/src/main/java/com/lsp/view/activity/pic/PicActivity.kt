@@ -83,7 +83,7 @@ class PicActivity : AppCompatActivity() {
         val intent = intent
         val tags = intent.getStringExtra("tags")
         if (tags != null) {
-            loadTags<Tags>(tags)
+            loadTags(tags,"tags")
         }
 
 
@@ -91,11 +91,11 @@ class PicActivity : AppCompatActivity() {
 
         val author = intent.getStringExtra("author")
         if (author!=null){
-            loadTags<Author>(author)
+            loadTags(author,"author")
         }
         val file_size = intent.getStringExtra("file_size")
         if (file_size!=null){
-            loadTags<Size>(file_size)
+            loadTags(file_size,"size")
         }
 
         val sharedPreferences = getSharedPreferences("FirstRun",0)
@@ -111,7 +111,7 @@ class PicActivity : AppCompatActivity() {
 
         val id = intent.getStringExtra("id")
         if (id!=null){
-            loadTags<ID>(id)
+            loadTags(id,"id")
         }
         val sample_url = intent.getStringExtra("sample_url")
         sample_url?.let {
@@ -293,10 +293,11 @@ class PicActivity : AppCompatActivity() {
 
     //设置tags列表
     //这写的很烂 得改
-     private inline fun <reified T> loadTags(tags:String){
+     private  fun  loadTags(tags:String,type){
 
-         when(T::class.java){
-             Tags::class.java ->{
+         when(type){
+             "tags" ->{
+
                  tagList.add(Tags("Tag"))
                  val list = tags.split(" ")
                  val tagRecyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.tagRecyclerView)
@@ -315,7 +316,7 @@ class PicActivity : AppCompatActivity() {
                  })
                  tagRecyclerView.adapter = adapter
              }
-             Author::class.java->{
+             "author"->{
                  authorList.add(Author("Author"))
                  val authorRecyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.authorRecyclerView)
                  authorRecyclerView.layoutManager = layoutManager()
@@ -323,7 +324,7 @@ class PicActivity : AppCompatActivity() {
                  val adapter = AuthorAdapter(authorList)
                  authorRecyclerView.adapter = adapter
              }
-             ID::class.java->{
+             "id"->{
                  idList.add(ID("ID"))
                  idList.add(ID(tags))
                  val idRecyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.idRecyclerView)
@@ -331,7 +332,7 @@ class PicActivity : AppCompatActivity() {
                  val adapter = IdAdapter(idList)
                  idRecyclerView.adapter = adapter
              }
-             Size::class.java->{
+             "size"->{
                  sizeList.add(Size("Size"))
                  sizeList.add(Size(tags))
                  val sizeRecyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.sizeRecyclerView)
