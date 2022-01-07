@@ -199,7 +199,7 @@ class MainActivity : AppCompatActivity() {
                     swipeRefreshLayout.isRefreshing = true
                     loadPost(this,null,"1",null,false,true)
                     drawerLayout.closeDrawers()
-                    search.setText("")
+                    searchTag = ""
                     true
                 }
                 //设置

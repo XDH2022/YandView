@@ -58,6 +58,7 @@ class PicActivity : AppCompatActivity() {
     private var shortAnnotationDuration by Delegates.notNull<Int>()
     lateinit var downloadBinder:DownloadService.DownloadBinder
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //看不懂的硬编码 导航栏全透明
