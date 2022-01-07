@@ -93,13 +93,6 @@ class MainActivity : AppCompatActivity() {
 
             //收藏Tag
 
-
-
-
-
-
-
-
         val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
             R.id.fbtn
         )
@@ -279,16 +272,7 @@ class MainActivity : AppCompatActivity() {
     }
     //执行搜索
     private fun searchAction(tags: String?) {
-//        if (safeMode){
-//            if (tags.equals("&safeMode=false")){
-//                val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
-//                configSp.edit().putBoolean("safeMode",false).apply()
-//                safeMode = false
-//                Toast.makeText(this,"打开新世界的大门",Toast.LENGTH_SHORT).show()
-//                return
-//            }
-//
-//        }
+
 
 
         loadPost(this, tags, "1", null,true,true)
@@ -382,15 +366,6 @@ class MainActivity : AppCompatActivity() {
                         postList = list
                     }
 
-//                    if (safeMode){
-//                        for (post in list){
-//                            if (post.rating!="e"){
-//                                postList.add(post)
-//                            }
-//                        }
-//                    }else{
-//                        postList = list
-//                    }
                 } else {
                     swipeRefreshLayout.isRefreshing = false
                     Snackbar.make(swipeRefreshLayout,"只有这么多了哦",Snackbar.LENGTH_SHORT).show()
