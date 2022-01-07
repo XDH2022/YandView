@@ -4,18 +4,18 @@
         <item
             android:id="@+id/photo"
             android:icon="@drawable/ic_baseline_insert_photo_24"
-            android:title="Photo"/>
+            android:title="画廊"/>
         <item
             android:id="@+id/fav"
             android:icon="@drawable/ic_baseline_favorite_24"
-            android:title="Favorite"/>
+            android:title="收藏画廊"/>
         <item
             android:id="@+id/taglist"
             android:icon="@drawable/ic_baseline_label_24"
-            android:title="FavTags"/>
+            android:title="收藏标签"/>
         <item
             android:id="@+id/setting"
             android:icon="@drawable/setting_icon"
-            android:title="Setting"/>
+            android:title="设置"/>
     </group>
 </menu>
