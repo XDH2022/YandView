@@ -13,4 +13,9 @@
         <item>https://konachan.com/</item>
 
     </string-array>
+    <string-array name="mode_source">
+        <item>Safe</item>
+        <item>Questionable</item>
+        <item>Explicit</item>
+    </string-array>
 </resources>

@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 //    private var isRefresh=true
     val TAG = javaClass.simpleName
     private  lateinit var layoutManager: RecyclerView.LayoutManager
-    private var safeMode = true //安全模式
+    private var safeMode:String? = "Safe" //安全模式
     private lateinit var recyclerView:RecyclerView
     private var barShow = false
 
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //安全模式验证
-        safeMode =configSp.getBoolean("safeMode",true)
+        safeMode = configSp.getString("mode","Safe")
 
         //横屏逻辑
         layoutManager = GridLayoutManager(this, 2)
@@ -282,16 +282,16 @@ class MainActivity : AppCompatActivity() {
     }
     //执行搜索
     private fun searchAction(tags: String?) {
-        if (safeMode){
-            if (tags.equals("&safeMode=false")){
-                val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
-                configSp.edit().putBoolean("safeMode",false).apply()
-                safeMode = false
-                Toast.makeText(this,"打开新世界的大门",Toast.LENGTH_SHORT).show()
-                return
-            }
-
-        }
+//        if (safeMode){
+//            if (tags.equals("&safeMode=false")){
+//                val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
+//                configSp.edit().putBoolean("safeMode",false).apply()
+//                safeMode = false
+//                Toast.makeText(this,"打开新世界的大门",Toast.LENGTH_SHORT).show()
+//                return
+//            }
+//
+//        }
 
         val swipeRefreshLayout =
             findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
@@ -307,8 +307,12 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
+        val nowMode = configSp.getString("mode","Safe")
         val saveName =  configSp.getString("sourceName",null)
-        if (saveName!=nowSourceName) {
+        if (saveName!=nowSourceName||nowMode!=safeMode) {
+            if (nowMode!=safeMode){
+                safeMode=nowMode
+            }
 
             val swipeRefreshLayout =
                 findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
@@ -368,15 +372,31 @@ class MainActivity : AppCompatActivity() {
                 val list = response.body()
 
                 if (list != null&&list.size>1) {
-                    if (safeMode){
+                    if (safeMode.equals("Safe")){
+                        for (post in list){
+                            if (post.rating=="s"){
+                                postList.add(post)
+                            }
+                        }
+                    }else if (safeMode.equals("Questionable")){
                         for (post in list){
                             if (post.rating!="e"){
                                 postList.add(post)
                             }
                         }
-                    }else{
+                    }else if (safeMode.equals("Explicit")){
                         postList = list
                     }
+
+//                    if (safeMode){
+//                        for (post in list){
+//                            if (post.rating!="e"){
+//                                postList.add(post)
+//                            }
+//                        }
+//                    }else{
+//                        postList = list
+//                    }
                 } else {
                     swipeRefreshLayout.isRefreshing = false
                     Snackbar.make(swipeRefreshLayout,"只有这么多了哦",Snackbar.LENGTH_SHORT).show()
