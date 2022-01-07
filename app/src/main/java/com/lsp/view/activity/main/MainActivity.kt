@@ -118,7 +118,6 @@ class MainActivity : AppCompatActivity() {
             searchAction(searchTag)
         }else{
             //初次启动
-            swipeRefreshLayout.isRefreshing = true
             loadPost(this, null,nowPage.toString(),null,true,true)
         }
 
@@ -181,7 +180,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.fav -> {
 
 
-                    swipeRefreshLayout.isRefreshing=true
                     Log.w(TAG,username.toString())
                     if (username == null) {
                         alterEditDialog()
@@ -196,7 +194,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 //画廊
                 R.id.photo ->{
-                    swipeRefreshLayout.isRefreshing = true
                     loadPost(this,null,"1",null,false,true)
                     drawerLayout.closeDrawers()
                     searchTag = ""
@@ -293,11 +290,7 @@ class MainActivity : AppCompatActivity() {
 //
 //        }
 
-        val swipeRefreshLayout =
-            findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
-                R.id.swipeRefreshLayout
-            )
-        swipeRefreshLayout.isRefreshing = true
+
         loadPost(this, tags, "1", null,true,true)
 
 
@@ -314,11 +307,6 @@ class MainActivity : AppCompatActivity() {
                 safeMode=nowMode
             }
 
-            val swipeRefreshLayout =
-                findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
-                    R.id.swipeRefreshLayout
-                )
-            swipeRefreshLayout.isRefreshing = true
             loadPost(this, searchTag, nowPage.toString(),null,false,true)
         }
     }
@@ -332,6 +320,12 @@ class MainActivity : AppCompatActivity() {
      * @param page 页数
      */
     private fun loadPost(context: Context, tags: String?,page:String,position:Int?,initAdapter:Boolean,isRefresh:Boolean){
+        val swipeRefreshLayout =
+            findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
+                R.id.swipeRefreshLayout
+            )
+        swipeRefreshLayout.isRefreshing = true
+
         var postList:ArrayList<Post> = ArrayList()
         val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
         for ((index,name) in sourceName.withIndex() ){
