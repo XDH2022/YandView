@@ -171,14 +171,11 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId){
                 //收藏夹
                 R.id.fav -> {
-
-
                     Log.w(TAG,username.toString())
-                    if (username == null) {
+                    if (username == null||username=="") {
                         alterEditDialog()
-                        loadPost(this,"vote:3:$username order:vote","1",null,true,true)
-                        drawerLayout.closeDrawers()
                     }else{
+                        Log.e("username",username.toString())
                         loadPost(this,"vote:3:$username order:vote","1",null,true,true)
                         drawerLayout.closeDrawers()
                     }
@@ -219,13 +216,21 @@ class MainActivity : AppCompatActivity() {
     private fun alterEditDialog(){
         val et = EditText(this)
         AlertDialog.Builder(this)
-            .setTitle("请输入您的用户名")
+            .setTitle("请输入您的yande.re用户名")
             .setView(et)
             .setPositiveButton("确定") { _, _ ->
                 Log.w(TAG,et.text.toString())
-                val sharedPreferences = getSharedPreferences("username", 0).edit()
-                sharedPreferences.putString("username",et.text.toString()).apply()
+                val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+                if (et.text.toString()!="") {
+                    val sharedPreferences = getSharedPreferences("username", 0).edit()
+                    sharedPreferences.putString("username", et.text.toString()).apply()
+                    loadPost(this, "vote:3:$username order:vote", "1", null, true, true)
+                    drawerLayout.closeDrawers()
+                }else{
+                    Snackbar.make(drawerLayout,"用户名不能为空！",Snackbar.LENGTH_SHORT).show()
+                }
             }.create().show()
+
     }
     //隐藏搜索栏
     private fun hiddenSearchBar(){
