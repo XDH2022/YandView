@@ -14,11 +14,22 @@ import com.bumptech.glide.load.model.LazyHeaders
 import com.lsp.view.bean.Post
 import com.lsp.view.activity.pic.PicActivity
 import com.lsp.view.R
+import retrofit2.http.POST
 
 class PostAdapter(val context:Context, private var postList: ArrayList<Post>) :RecyclerView.Adapter<PostAdapter.ViewHolder>(){
     inner class ViewHolder(view: View) :RecyclerView.ViewHolder(view){
         val picImage: ImageView = view.findViewById<ImageView>(R.id.picImgae)
 
+    }
+
+    fun addData(list:ArrayList<Post>){
+        val pos = postList.size
+        postList.addAll(list)
+        notifyItemRangeInserted(pos,list.size)
+    }
+    fun refreshData(list: ArrayList<Post>){
+        postList = list
+        notifyItemRangeInserted(0,list.size)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -53,23 +64,6 @@ class PostAdapter(val context:Context, private var postList: ArrayList<Post>) :R
         this.mLoadMoreListener = mLoadMoreListener
 
     }
-
-    fun notifyData(newPostList: ArrayList<Post>, isRefresh:Boolean){
-        Log.e("isRefresh",isRefresh.toString())
-        if (isRefresh){
-            postList = newPostList
-            notifyItemRangeInserted(0, newPostList.size)
-
-        }else{
-            val position = postList.size
-            postList.addAll(newPostList)
-            notifyItemRangeInserted(position,postList.size)
-
-        }
-        Log.e("size",postList.size.toString())
-
-    }
-
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val post = postList[position]
