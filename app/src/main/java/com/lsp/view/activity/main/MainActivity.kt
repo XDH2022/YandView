@@ -46,14 +46,12 @@ class MainActivity : AppCompatActivity() {
     private var shortAnnotationDuration:Int = 0
     private var nowPage = 1
     private lateinit var adapter: PostAdapter
-//    private var isLoading = false
     private var nowPosition =0
     private var username:String? = ""
     private lateinit var sourceUrl:Array<String>
     private lateinit var sourceName:Array<String>
     private lateinit var source:String
     private  var nowSourceName: String?=null
-//    private var isRefresh=true
     val TAG = javaClass.simpleName
     private  lateinit var layoutManager: RecyclerView.LayoutManager
     private var safeMode:String? = "Safe" //安全模式
