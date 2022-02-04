@@ -7,8 +7,7 @@ class Post(
     val sample_url: String,
     val rating: String,
     val tags: String,
-    val file_ext:String,
-    val author:String,
-    val file_size : String
-) {
-}
+    val file_ext: String,
+    val author: String,
+    val file_size: String
+)

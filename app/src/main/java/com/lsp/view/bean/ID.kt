@@ -1,4 +1,3 @@
 package com.lsp.view.bean
 
-class ID(val  id:String) {
-}
+class ID(val id: String)

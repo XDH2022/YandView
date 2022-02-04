@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class StrToHash1 {
-    public static String shaEncrypt(String strSrc){
+    public static String shaEncrypt(String strSrc) {
         MessageDigest md = null;
         String strDes = null;
         byte[] bt = strSrc.getBytes();
@@ -20,7 +20,8 @@ public class StrToHash1 {
 
 
     }
-    private static String bytes2Hex(byte[] bts){
+
+    private static String bytes2Hex(byte[] bts) {
         StringBuilder des = new StringBuilder();
         String tmp = null;
         for (byte bt : bts) {

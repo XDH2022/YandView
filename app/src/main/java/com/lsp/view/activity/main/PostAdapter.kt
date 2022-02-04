@@ -11,43 +11,44 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
-import com.lsp.view.bean.Post
-import com.lsp.view.activity.pic.PicActivity
 import com.lsp.view.R
-import retrofit2.http.POST
+import com.lsp.view.activity.pic.PicActivity
+import com.lsp.view.bean.Post
 
-class PostAdapter(val context:Context, private var postList: ArrayList<Post>) :RecyclerView.Adapter<PostAdapter.ViewHolder>(){
-    inner class ViewHolder(view: View) :RecyclerView.ViewHolder(view){
+class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
+    RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val picImage: ImageView = view.findViewById<ImageView>(R.id.picImgae)
 
     }
 
-    fun addData(list:ArrayList<Post>){
+    fun addData(list: ArrayList<Post>) {
         val pos = postList.size
         postList.addAll(list)
-        notifyItemRangeInserted(pos,list.size)
+        notifyItemRangeInserted(pos, list.size)
     }
-    fun refreshData(list: ArrayList<Post>){
+
+    fun refreshData(list: ArrayList<Post>) {
         postList = list
-        notifyItemRangeInserted(0,list.size)
+        notifyItemRangeInserted(0, list.size)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.img_item_layout,parent,false)
+        val view = LayoutInflater.from(context).inflate(R.layout.img_item_layout, parent, false)
         val viewHolder = ViewHolder(view)
         viewHolder.picImage.setOnClickListener {
             val position = viewHolder.adapterPosition
-            Log.w("position",position.toString())
-            Log.w("url",postList[position].sample_url)
-            Log.w("rating",postList[position].rating)
+            Log.w("position", position.toString())
+            Log.w("url", postList[position].sample_url)
+            Log.w("rating", postList[position].rating)
             val intent = Intent(context, PicActivity::class.java)
-            intent.putExtra("id",postList[position].id)
-            intent.putExtra("sample_url",postList[position].sample_url)
-            intent.putExtra("file_url",postList[position].file_url)
-            intent.putExtra("tags",postList[position].tags)
-            intent.putExtra("file_ext",postList[position].file_ext)
-            intent.putExtra("author",postList[position].author)
-            intent.putExtra("file_size",postList[position].file_size)
+            intent.putExtra("id", postList[position].id)
+            intent.putExtra("sample_url", postList[position].sample_url)
+            intent.putExtra("file_url", postList[position].file_url)
+            intent.putExtra("tags", postList[position].tags)
+            intent.putExtra("file_ext", postList[position].file_ext)
+            intent.putExtra("author", postList[position].author)
+            intent.putExtra("file_size", postList[position].file_size)
             context.startActivity(intent)
         }
 
@@ -56,11 +57,11 @@ class PostAdapter(val context:Context, private var postList: ArrayList<Post>) :R
 
     private lateinit var mLoadMoreListener: OnLoadMoreListener
 
-    interface  OnLoadMoreListener{
+    interface OnLoadMoreListener {
         fun loadMore(position: Int)
     }
 
-    fun setLoadMoreListener(mLoadMoreListener: OnLoadMoreListener){
+    fun setLoadMoreListener(mLoadMoreListener: OnLoadMoreListener) {
         this.mLoadMoreListener = mLoadMoreListener
 
     }
@@ -68,29 +69,28 @@ class PostAdapter(val context:Context, private var postList: ArrayList<Post>) :R
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val post = postList[position]
         //TODO 增加XML解析 节省流量
-        val glideUrl:GlideUrl
-        var source:String
-        if (post.preview_url!=null) {
-            source =  post.preview_url
+        val glideUrl: GlideUrl
+        var source: String
+        if (post.preview_url != null) {
+            source = post.preview_url
 
-        }else{
+        } else {
             source = post.file_url
         }
-        glideUrl = GlideUrl(source
-            ,
+        glideUrl = GlideUrl(
+            source,
             LazyHeaders.Builder().addHeader(
                 "User-Agent",
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
             ).build()
         )
         Glide.with(context).load(glideUrl).into(holder.picImage)
-        if (position==postList.size-1&&postList.size>6){
+        if (position == postList.size - 1 && postList.size > 6) {
             //到达底部
             mLoadMoreListener.loadMore(position)
         }
 
     }
-
 
 
     override fun getItemCount(): Int {

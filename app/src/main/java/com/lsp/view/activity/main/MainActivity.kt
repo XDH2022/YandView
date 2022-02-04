@@ -21,43 +21,37 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.lsp.view.bean.Post
 import com.hentai.yandeview.Retrofit.PostService
 import com.hentai.yandeview.Retrofit.ServiceCreator
 import com.lsp.view.R
 import com.lsp.view.activity.favtag.FavTagActivity
-import com.lsp.view.activity.favtag.FavTagAdapter
-import com.lsp.view.bean.Tags
 import com.lsp.view.activity.setting.SettingsActivity
+import com.lsp.view.bean.Post
 import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Exception
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
-    private var searchTag:String? = null
-    private lateinit var search:EditText
-    private lateinit var searchBar:LinearLayout
-    private var shortAnnotationDuration:Int = 0
+    private var searchTag: String? = null
+    private lateinit var search: EditText
+    private lateinit var searchBar: LinearLayout
+    private var shortAnnotationDuration: Int = 0
     private var nowPage = 1
     private lateinit var adapter: PostAdapter
-    private var nowPosition =0
-    private var username:String? = ""
-    private lateinit var sourceUrl:Array<String>
-    private lateinit var sourceName:Array<String>
-    private lateinit var source:String
-    private  var nowSourceName: String?=null
+    private var nowPosition = 0
+    private var username: String? = ""
+    private lateinit var sourceUrl: Array<String>
+    private lateinit var sourceName: Array<String>
+    private lateinit var source: String
+    private var nowSourceName: String? = null
     val TAG = javaClass.simpleName
-    private  lateinit var layoutManager: RecyclerView.LayoutManager
-    private var safeMode:String? = "Safe" //安全模式
-    private lateinit var recyclerView:RecyclerView
+    private lateinit var layoutManager: RecyclerView.LayoutManager
+    private var safeMode: String? = "Safe" //安全模式
+    private lateinit var recyclerView: RecyclerView
     private var barShow = false
-    private var tags:String?= ""
+    private var tags: String? = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,18 +62,18 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        adapter =  PostAdapter(this, ArrayList<Post>())
-        adapter.setLoadMoreListener(object : PostAdapter.OnLoadMoreListener{
+        adapter = PostAdapter(this, ArrayList<Post>())
+        adapter.setLoadMoreListener(object : PostAdapter.OnLoadMoreListener {
             //重写接口
             override fun loadMore(position: Int) {
-                setResponseListener(object :onResponseListener{
+                setResponseListener(object : onResponseListener {
                     override fun response(list: ArrayList<Post>) {
                         adapter.addData(list)
                     }
 
                 })
 
-                requestPost(this@MainActivity,tags,(++nowPage).toString())
+                requestPost(this@MainActivity, tags, (++nowPage).toString())
 
             }
 
@@ -87,19 +81,19 @@ class MainActivity : AppCompatActivity() {
 
         sourceName = resources.getStringArray(R.array.pic_source)
         sourceUrl = resources.getStringArray(R.array.url_source)
-        val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
-        if (configSp.getString("sourceName",null)==null){
-            configSp.edit().putString("sourceName","yande.re").apply()
-            configSp.edit().putString("type","0").apply()
+        val configSp = getSharedPreferences("com.lsper.view_preferences", 0)
+        if (configSp.getString("sourceName", null) == null) {
+            configSp.edit().putString("sourceName", "yande.re").apply()
+            configSp.edit().putString("type", "0").apply()
         }
 
         //安全模式验证
-        safeMode = configSp.getString("mode","Safe")
+        safeMode = configSp.getString("mode", "Safe")
 
         //横屏逻辑
         layoutManager = GridLayoutManager(this, 2)
         recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerview)
-        if (getResources().getConfiguration().orientation!=Configuration.ORIENTATION_PORTRAIT){
+        if (resources.configuration.orientation != Configuration.ORIENTATION_PORTRAIT) {
             layoutManager = LinearLayoutManager(this)
             (layoutManager as LinearLayoutManager).orientation = LinearLayoutManager.HORIZONTAL
         }
@@ -107,27 +101,29 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
 
 
-            //收藏Tag
+        //收藏Tag
 
-        val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
-            R.id.fbtn
-        )
-        val swipeRefreshLayout = findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
-            R.id.swipeRefreshLayout
-        )
+        val fbtn =
+            findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
+                R.id.fbtn
+            )
+        val swipeRefreshLayout =
+            findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
+                R.id.swipeRefreshLayout
+            )
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
 
 
         search = findViewById<EditText>(R.id.search)
         //快捷搜索tag 来自PicActivity
         searchTag = intent.getStringExtra("searchTag")
-        if (searchTag!=null){
+        if (searchTag != null) {
             //tag按钮搜索
             this.search.setText(searchTag)
             searchAction(searchTag)
-        }else{
+        } else {
             //初次启动
-            loadPost(this, null,nowPage.toString(),true)
+            loadPost(this, null, nowPage.toString(), true)
         }
 
         val close = findViewById<View>(R.id.close)
@@ -145,7 +141,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         search.setOnEditorActionListener { v, actionId, event ->
-            if (actionId==EditorInfo.IME_ACTION_SEARCH){
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 searchAction(search.text.toString())
                 searchTag = search.text.toString()
                 hiddenSearchBar()
@@ -155,7 +151,7 @@ class MainActivity : AppCompatActivity() {
 
         fbtn.setOnClickListener {
 
-            if (barShow){
+            if (barShow) {
                 searchTag = search.text.toString()
                 searchAction(searchTag)
                 hiddenSearchBar()
@@ -171,12 +167,12 @@ class MainActivity : AppCompatActivity() {
         //刷新
         swipeRefreshLayout.setOnRefreshListener {
             nowPage = 1
-            loadPost(this, searchTag,nowPage.toString(),true)
+            loadPost(this, searchTag, nowPage.toString(), true)
         }
 
         //侧边栏
-        val sp = getSharedPreferences("username",0)
-        username = sp.getString("username",null)
+        val sp = getSharedPreferences("username", 0)
+        username = sp.getString("username", null)
 
         val nav = findViewById<NavigationView>(R.id.nav)
 
@@ -184,37 +180,37 @@ class MainActivity : AppCompatActivity() {
         nav.setCheckedItem(R.id.photo)
         //设置侧边栏点击逻辑
         nav.setNavigationItemSelectedListener {
-            when(it.itemId){
+            when (it.itemId) {
                 //收藏夹
                 R.id.fav -> {
-                    Log.w(TAG,username.toString())
-                    if (username == null||username=="") {
+                    Log.w(TAG, username.toString())
+                    if (username == null || username == "") {
                         alterEditDialog()
-                    }else{
-                        Log.e("username",username.toString())
-                        loadPost(this,"vote:3:$username order:vote","1",true)
+                    } else {
+                        Log.e("username", username.toString())
+                        loadPost(this, "vote:3:$username order:vote", "1", true)
                         drawerLayout.closeDrawers()
                     }
 
                     true
                 }
                 //画廊
-                R.id.photo ->{
-                    loadPost(this,null,"1",true)
+                R.id.photo -> {
+                    loadPost(this, null, "1", true)
                     drawerLayout.closeDrawers()
                     searchTag = ""
                     true
                 }
                 //设置
                 R.id.setting -> {
-                    val intent = Intent(this,SettingsActivity::class.java)
+                    val intent = Intent(this, SettingsActivity::class.java)
                     startActivity(intent)
                     drawerLayout.closeDrawers()
                     false
 
                 }
                 R.id.taglist -> {
-                    val intent = Intent(this,FavTagActivity::class.java)
+                    val intent = Intent(this, FavTagActivity::class.java)
                     startActivity(intent)
                     drawerLayout.closeDrawers()
                     false
@@ -227,33 +223,33 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     //弹出键入用户名对话框
-    private fun alterEditDialog(){
+    private fun alterEditDialog() {
         val et = EditText(this)
         AlertDialog.Builder(this)
             .setTitle("请输入您的yande.re用户名")
             .setView(et)
             .setPositiveButton("确定") { _, _ ->
-                Log.w(TAG,et.text.toString())
+                Log.w(TAG, et.text.toString())
                 val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
-                if (et.text.toString()!="") {
+                if (et.text.toString() != "") {
                     val sharedPreferences = getSharedPreferences("username", 0).edit()
                     sharedPreferences.putString("username", et.text.toString()).apply()
-                    loadPost(this, "vote:3:$username order:vote", "1",   true)
+                    loadPost(this, "vote:3:$username order:vote", "1", true)
                     drawerLayout.closeDrawers()
-                }else{
-                    Snackbar.make(drawerLayout,"用户名不能为空！",Snackbar.LENGTH_SHORT).show()
+                } else {
+                    Snackbar.make(drawerLayout, "用户名不能为空！", Snackbar.LENGTH_SHORT).show()
                 }
             }.create().show()
 
     }
+
     //隐藏搜索栏
-    private fun hiddenSearchBar(){
+    private fun hiddenSearchBar() {
         searchBar.animate()
             .alpha(0f)
             .setDuration(shortAnnotationDuration.toLong())
-            .setListener(object :AnimatorListenerAdapter(){
+            .setListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator?) {
                     searchBar.visibility = View.GONE
                 }
@@ -261,8 +257,9 @@ class MainActivity : AppCompatActivity() {
         barShow = false
 
     }
+
     //现实搜索栏
-    private fun showSearchBar(){
+    private fun showSearchBar() {
 
         searchBar.apply {
             alpha = 0f
@@ -277,52 +274,51 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
-        when(item.itemId){
-            android.R.id.home ->  drawerLayout.openDrawer(GravityCompat.START)
+        when (item.itemId) {
+            android.R.id.home -> drawerLayout.openDrawer(GravityCompat.START)
         }
         return true
     }
 
 
-    private fun hideIm( v: View){
+    private fun hideIm(v: View) {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
         if (imm.isActive) {
-            imm.hideSoftInputFromWindow(v.applicationWindowToken,0)
+            imm.hideSoftInputFromWindow(v.applicationWindowToken, 0)
         }
     }
+
     //执行搜索
     private fun searchAction(tags: String?) {
 
 
-
         loadPost(this, tags, "1", true)
-
 
 
     }
 
     override fun onResume() {
         super.onResume()
-        val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
-        val nowMode = configSp.getString("mode","Safe")
-        val saveName =  configSp.getString("sourceName",null)
-        if (saveName!=nowSourceName||nowMode!=safeMode) {
-            if (nowMode!=safeMode){
-                safeMode=nowMode
+        val configSp = getSharedPreferences("com.lsper.view_preferences", 0)
+        val nowMode = configSp.getString("mode", "Safe")
+        val saveName = configSp.getString("sourceName", null)
+        if (saveName != nowSourceName || nowMode != safeMode) {
+            if (nowMode != safeMode) {
+                safeMode = nowMode
             }
 
-            loadPost(this, searchTag, nowPage.toString(),true)
+            loadPost(this, searchTag, nowPage.toString(), true)
         }
     }
 
-    private lateinit var mOnResponse : onResponseListener
+    private lateinit var mOnResponse: onResponseListener
 
-    interface onResponseListener{
-        fun response(list:ArrayList<Post>)
+    interface onResponseListener {
+        fun response(list: ArrayList<Post>)
     }
 
-    fun setResponseListener(mOnResponse: onResponseListener){
+    fun setResponseListener(mOnResponse: onResponseListener) {
         this.mOnResponse = mOnResponse
 
     }
@@ -334,47 +330,51 @@ class MainActivity : AppCompatActivity() {
      * @param tags 标签
      * @param page 页数
      */
-    private fun requestPost(context: Context, tags: String?,page:String){
-        Log.e("page",page)
+    private fun requestPost(context: Context, tags: String?, page: String) {
+        Log.e("page", page)
         val swipeRefreshLayout =
             findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
                 R.id.swipeRefreshLayout
             )
         swipeRefreshLayout.isRefreshing = true
 
-        var postList:ArrayList<Post> = ArrayList()
-        val configSp =  getSharedPreferences("com.lsper.view_preferences",0)
-        for ((index,name) in sourceName.withIndex() ){
-            if (name == configSp.getString("sourceName",null)){
-                nowSourceName = configSp.getString("sourceName",null)
+        var postList: ArrayList<Post> = ArrayList()
+        val configSp = getSharedPreferences("com.lsper.view_preferences", 0)
+        for ((index, name) in sourceName.withIndex()) {
+            if (name == configSp.getString("sourceName", null)) {
+                nowSourceName = configSp.getString("sourceName", null)
                 source = sourceUrl[index]
             }
         }
 
 
-        val postService: PostService = if(source!=null){
+        val postService: PostService = if (source != null) {
             ServiceCreator.create<PostService>(source)
-        }else {
+        } else {
             ServiceCreator.create<PostService>("https://yande.re/")
         }
-        var service:Call<ArrayList<Post>>
+        var service: Call<ArrayList<Post>>
 //        if (tyep.equals("0")){
-        service   =  postService.getPostData("100", tags,page)
+        service = postService.getPostData("100", tags, page)
 //        }else{
 //            service =  postService.getPostData_php("dapi","post","index","100",tags,"1",nowPage.toString())
 //        }
 
         service.enqueue(object : Callback<ArrayList<Post>> {
             override fun onFailure(call: Call<ArrayList<Post>>, t: Throwable) {
-                val fbtn = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
-                    R.id.fbtn
-                )
-                Snackbar.make(fbtn,"请检查网络连接",Snackbar.LENGTH_LONG).show()
+                val fbtn =
+                    findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
+                        R.id.fbtn
+                    )
+                Snackbar.make(fbtn, "请检查网络连接", Snackbar.LENGTH_LONG).show()
                 val handler = Handler()
-                handler.postDelayed({ requestPost(context, tags, page)},3000)
+                handler.postDelayed({ requestPost(context, tags, page) }, 3000)
             }
 
-            override fun onResponse(call: Call<ArrayList<Post>>, response: Response<ArrayList<Post>>) {
+            override fun onResponse(
+                call: Call<ArrayList<Post>>,
+                response: Response<ArrayList<Post>>
+            ) {
 
 
                 val swipeRefreshLayout =
@@ -383,26 +383,26 @@ class MainActivity : AppCompatActivity() {
                     )
                 val list = response.body()
 
-                if (list != null&&list.size>1) {
-                    if (safeMode.equals("Safe")){
-                        for (post in list){
-                            if (post.rating=="s"){
+                if (list != null && list.size > 1) {
+                    if (safeMode.equals("Safe")) {
+                        for (post in list) {
+                            if (post.rating == "s") {
                                 postList.add(post)
                             }
                         }
-                    }else if (safeMode.equals("Questionable")){
-                        for (post in list){
-                            if (post.rating!="e"){
+                    } else if (safeMode.equals("Questionable")) {
+                        for (post in list) {
+                            if (post.rating != "e") {
                                 postList.add(post)
                             }
                         }
-                    }else if (safeMode.equals("Explicit")){
+                    } else if (safeMode.equals("Explicit")) {
                         postList = list
                     }
 
                 } else {
                     swipeRefreshLayout.isRefreshing = false
-                    Snackbar.make(swipeRefreshLayout,"只有这么多了哦",Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(swipeRefreshLayout, "只有这么多了哦", Snackbar.LENGTH_SHORT).show()
                     Log.w(TAG, "post is null")
                     return
                 }
@@ -415,17 +415,16 @@ class MainActivity : AppCompatActivity() {
         })
 
 
-
     }
 
-    private fun loadPost(context: Context, tags: String?, page:String, isRefresh:Boolean){
+    private fun loadPost(context: Context, tags: String?, page: String, isRefresh: Boolean) {
         this.tags = tags
 
-        setResponseListener(object :onResponseListener{
+        setResponseListener(object : onResponseListener {
             override fun response(list: ArrayList<Post>) {
                 recyclerView.adapter = SlideInBottomAnimationAdapter(adapter)
 
-                if (isRefresh){
+                if (isRefresh) {
                     adapter.refreshData(list)
                 }
 
@@ -434,7 +433,7 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        requestPost(context,tags,page)
+        requestPost(context, tags, page)
     }
 
 }

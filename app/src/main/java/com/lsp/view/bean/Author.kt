@@ -1,4 +1,3 @@
 package com.lsp.view.bean
 
-class Author(val author: String) {
-}
+class Author(val author: String)

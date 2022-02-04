@@ -23,15 +23,16 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             android.R.id.home -> {
-                finish();
+                finish()
             }
         }
 
         return super.onOptionsItemSelected(item)
 
     }
+
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)

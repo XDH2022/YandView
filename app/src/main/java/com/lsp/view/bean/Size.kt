@@ -1,4 +1,3 @@
 package com.lsp.view.bean
 
-class Size(val file_size:String) {
-}
+class Size(val file_size: String)
