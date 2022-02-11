@@ -354,7 +354,7 @@ class PicActivity : AppCompatActivity() {
                 val idRecyclerView =
                     findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.idRecyclerView)
                 idRecyclerView.layoutManager = layoutManager()
-                val adapter = IdAdapter(idList)
+                val adapter = IdAdapter(idList,this)
                 idRecyclerView.adapter = adapter
             }
             "size" -> {

@@ -25,12 +25,14 @@ import com.hentai.yandeview.Retrofit.PostService
 import com.hentai.yandeview.Retrofit.ServiceCreator
 import com.lsp.view.R
 import com.lsp.view.activity.favtag.FavTagActivity
+import com.lsp.view.activity.pic.PicActivity
 import com.lsp.view.activity.setting.SettingsActivity
 import com.lsp.view.bean.Post
 import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.NumberFormatException
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -291,9 +293,20 @@ class MainActivity : AppCompatActivity() {
 
     //执行搜索
     private fun searchAction(tags: String?) {
+        Log.e("num",tags.toString())
+        var tag = tags
+        var isNum = true
+        try {
+            tags?.toInt()
+        }catch (e:NumberFormatException){
+            isNum = false
+        }
 
+        if (isNum){
+            tag = "id:"+tags
+        }
 
-        loadPost(this, tags, "1", true)
+        loadPost(this, tag, "1", true)
 
 
     }
@@ -383,7 +396,7 @@ class MainActivity : AppCompatActivity() {
                     )
                 val list = response.body()
 
-                if (list != null && list.size > 1) {
+                if (list != null && list.size >= 1) {
                     if (safeMode.equals("Safe")) {
                         for (post in list) {
                             if (post.rating == "s") {
