@@ -59,6 +59,22 @@ class PicActivity : AppCompatActivity() {
     lateinit var downloadBinder: DownloadService.DownloadBinder
 
 
+    companion object{
+        fun actionStartActivity(context: Context,id:String,sample_url:String,file_url:String,tags:String,
+                                file_ext:String,author:String,file_size:String){
+            val intent=Intent(context,PicActivity::class.java)
+            intent.putExtra("id", id)
+            intent.putExtra("sample_url", sample_url)
+            intent.putExtra("file_url", file_url)
+            intent.putExtra("tags", tags)
+            intent.putExtra("file_ext", file_ext)
+            intent.putExtra("author", author)
+            intent.putExtra("file_size", file_size)
+            context.startActivity(intent)
+
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //看不懂的硬编码 导航栏全透明

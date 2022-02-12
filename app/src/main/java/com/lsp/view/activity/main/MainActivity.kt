@@ -419,6 +419,11 @@ class MainActivity : AppCompatActivity() {
                     Log.w(TAG, "post is null")
                     return
                 }
+                if (tags?.split(":")?.get(0).equals("id")){
+                    PicActivity.actionStartActivity(context,postList[0].id,postList[0].sample_url,
+                        postList[0].file_url,postList[0].tags,postList[0].file_ext,
+                        postList[0].author,postList[0].file_size)
+                }
 
                 mOnResponse.response(postList)
 

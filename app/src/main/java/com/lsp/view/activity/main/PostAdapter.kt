@@ -41,15 +41,10 @@ class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
             Log.w("position", position.toString())
             Log.w("url", postList[position].sample_url)
             Log.w("rating", postList[position].rating)
-            val intent = Intent(context, PicActivity::class.java)
-            intent.putExtra("id", postList[position].id)
-            intent.putExtra("sample_url", postList[position].sample_url)
-            intent.putExtra("file_url", postList[position].file_url)
-            intent.putExtra("tags", postList[position].tags)
-            intent.putExtra("file_ext", postList[position].file_ext)
-            intent.putExtra("author", postList[position].author)
-            intent.putExtra("file_size", postList[position].file_size)
-            context.startActivity(intent)
+
+            PicActivity.actionStartActivity(context,postList[position].id,postList[position].sample_url,
+                postList[position].file_url,postList[position].tags,postList[position].file_ext,
+                postList[position].author,postList[position].file_size)
         }
 
         return viewHolder
