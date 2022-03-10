@@ -65,13 +65,8 @@ class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
         val post = postList[position]
         //TODO 增加XML解析 节省流量
         val glideUrl: GlideUrl
-        var source: String
-        if (post.preview_url != null) {
-            source = post.preview_url
+        var source: String = post.sample_url
 
-        } else {
-            source = post.file_url
-        }
         glideUrl = GlideUrl(
             source,
             LazyHeaders.Builder().addHeader(
