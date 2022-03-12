@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -14,11 +15,15 @@ import com.bumptech.glide.load.model.LazyHeaders
 import com.lsp.view.R
 import com.lsp.view.activity.pic.PicActivity
 import com.lsp.view.bean.Post
+import android.os.Build
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
+
 
 class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
     RecyclerView.Adapter<PostAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val picImage: ImageView = view.findViewById<ImageView>(R.id.picImgae)
+        val item_pic = view.findViewById<com.google.android.material.card.MaterialCardView>(R.id.item_pic)
 
     }
 
@@ -74,6 +79,7 @@ class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
             ).build()
         )
+        holder.picImage.layoutParams.height = postList[position].sample_height
         Glide.with(context).load(glideUrl).into(holder.picImage)
         if (position == postList.size - 1 && postList.size > 6) {
             //到达底部
@@ -81,7 +87,6 @@ class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
         }
 
     }
-
 
     override fun getItemCount(): Int {
         return postList.size

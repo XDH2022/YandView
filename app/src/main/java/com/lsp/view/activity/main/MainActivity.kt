@@ -34,6 +34,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.NumberFormatException
 import java.util.*
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+
+
+
 
 class MainActivity : AppCompatActivity() {
     private var searchTag: String? = null
@@ -93,12 +97,8 @@ class MainActivity : AppCompatActivity() {
         safeMode = configSp.getString("mode", "Safe")
 
         //横屏逻辑
-        layoutManager = GridLayoutManager(this, 2)
+        layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerview)
-        if (resources.configuration.orientation != Configuration.ORIENTATION_PORTRAIT) {
-            layoutManager = LinearLayoutManager(this)
-            (layoutManager as LinearLayoutManager).orientation = LinearLayoutManager.HORIZONTAL
-        }
 
         recyclerView.layoutManager = layoutManager
 
