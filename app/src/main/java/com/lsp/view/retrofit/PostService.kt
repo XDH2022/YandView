@@ -10,7 +10,7 @@ interface PostService {
     fun getPostData(
         @Query("limit") limit: String,
         @Query("tags") tags: String?,
-        @Query("page") page: String
+        @Query("page") page: Int
     ): Call<ArrayList<Post>>
 
     @GET("index.php")

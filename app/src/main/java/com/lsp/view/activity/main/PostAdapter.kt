@@ -21,9 +21,9 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 
 class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
     RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+    val TAG = this::class.java.simpleName
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val picImage: ImageView = view.findViewById<ImageView>(R.id.picImgae)
-        val item_pic = view.findViewById<com.google.android.material.card.MaterialCardView>(R.id.item_pic)
 
     }
 
@@ -34,7 +34,11 @@ class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
     }
 
     fun refreshData(list: ArrayList<Post>) {
-        postList = list
+
+        val oldSize = postList.size
+        postList.clear()
+        notifyItemRangeRemoved(0,oldSize)
+        postList.addAll(list)
         notifyItemRangeInserted(0, list.size)
     }
 

@@ -14,14 +14,10 @@
 
     </PreferenceCategory>
     <PreferenceCategory app:title="安全检查">
-        <ListPreference
-            app:defaultValue="Safe"
-            app:entries="@array/mode_source"
-            app:entryValues="@array/mode_source"
-            app:key="mode"
-            android:title="安全级别"
-            app:useSimpleSummaryProvider="true"/>
-
+        <CheckBoxPreference
+            app:defaultValue="true"
+            app:title="安全模式"
+            app:key="safe_mode"/>
     </PreferenceCategory>
 
 

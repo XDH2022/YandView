@@ -7,6 +7,8 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -35,8 +37,8 @@ import retrofit2.Response
 import java.lang.NumberFormatException
 import java.util.*
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-
-
+import com.lsp.view.activity.model.MainActivityModelImpl
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
@@ -46,15 +48,14 @@ class MainActivity : AppCompatActivity() {
     private var shortAnnotationDuration: Int = 0
     private var nowPage = 1
     private lateinit var adapter: PostAdapter
-    private var nowPosition = 0
     private var username: String? = ""
-    private lateinit var sourceUrl: Array<String>
-    private lateinit var sourceName: Array<String>
+    private lateinit var sourceUrlArray: Array<String>
+    private lateinit var sourceNameArray: Array<String>
     private lateinit var source: String
     private var nowSourceName: String? = null
     val TAG = javaClass.simpleName
     private lateinit var layoutManager: RecyclerView.LayoutManager
-    private var safeMode: String? = "Safe" //安全模式
+    private var safeMode: Boolean = true //安全模式
     private lateinit var recyclerView: RecyclerView
     private var barShow = false
     private var tags: String? = ""
@@ -69,38 +70,38 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         adapter = PostAdapter(this, ArrayList<Post>())
+
+        //到达底部，加载更多数据
         adapter.setLoadMoreListener(object : PostAdapter.OnLoadMoreListener {
             //重写接口
             override fun loadMore(position: Int) {
-                setResponseListener(object : onResponseListener {
-                    override fun response(list: ArrayList<Post>) {
-                        adapter.addData(list)
-                    }
+                loadData(tags,++nowPage,0)
 
-                })
-
-                requestPost(this@MainActivity, tags, (++nowPage).toString())
 
             }
 
         })
 
-        sourceName = resources.getStringArray(R.array.pic_source)
-        sourceUrl = resources.getStringArray(R.array.url_source)
+        //初始化数据
+        sourceNameArray = resources.getStringArray(R.array.pic_source)
+        sourceUrlArray = resources.getStringArray(R.array.url_source)
         val configSp = getSharedPreferences("com.lsper.view_preferences", 0)
         if (configSp.getString("sourceName", null) == null) {
             configSp.edit().putString("sourceName", "yande.re").apply()
             configSp.edit().putString("type", "0").apply()
         }
+        nowSourceName = configSp.getString("sourceName","yande.re")
+        safeMode = configSp.getBoolean("safe_mode",true)
 
-        //安全模式验证
-        safeMode = configSp.getString("mode", "Safe")
+
 
         //横屏逻辑
         layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerview)
 
         recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = adapter
+
 
 
         //收藏Tag
@@ -125,7 +126,7 @@ class MainActivity : AppCompatActivity() {
             searchAction(searchTag)
         } else {
             //初次启动
-            loadPost(this, null, nowPage.toString(), true)
+            loadData( tags,1,0)
         }
 
         val close = findViewById<View>(R.id.close)
@@ -169,7 +170,7 @@ class MainActivity : AppCompatActivity() {
         //刷新
         swipeRefreshLayout.setOnRefreshListener {
             nowPage = 1
-            loadPost(this, searchTag, nowPage.toString(), true)
+            loadData( searchTag, nowPage, 1)
         }
 
         //侧边栏
@@ -190,7 +191,7 @@ class MainActivity : AppCompatActivity() {
                         alterEditDialog()
                     } else {
                         Log.e("username", username.toString())
-                        loadPost(this, "vote:3:$username order:vote", "1", true)
+                        loadData( "vote:3:$username order:vote", 1, 1)
                         drawerLayout.closeDrawers()
                     }
 
@@ -198,7 +199,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 //画廊
                 R.id.photo -> {
-                    loadPost(this, null, "1", true)
+                    loadData( null, 1, 1)
                     drawerLayout.closeDrawers()
                     searchTag = ""
                     true
@@ -224,6 +225,22 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        //加载源改变
+        val configSp = getSharedPreferences("com.lsper.view_preferences", 0)
+        if (nowSourceName != configSp.getString("sourceName",null)){
+            loadData(tags,1,1)
+            nowSourceName = configSp.getString("sourceName",null)
+        }
+
+        if (safeMode != configSp.getBoolean("safe_mode",true)){
+            loadData(tags,1,1)
+            safeMode = configSp.getBoolean("safe_mode",true)
+        }
+
+    }
+
 
     //弹出键入用户名对话框
     private fun alterEditDialog() {
@@ -237,7 +254,7 @@ class MainActivity : AppCompatActivity() {
                 if (et.text.toString() != "") {
                     val sharedPreferences = getSharedPreferences("username", 0).edit()
                     sharedPreferences.putString("username", et.text.toString()).apply()
-                    loadPost(this, "vote:3:$username order:vote", "1", true)
+                    loadData( "vote:3:$username order:vote", 1, 1)
                     drawerLayout.closeDrawers()
                 } else {
                     Snackbar.make(drawerLayout, "用户名不能为空！", Snackbar.LENGTH_SHORT).show()
@@ -306,152 +323,61 @@ class MainActivity : AppCompatActivity() {
             tag = "id:"+tags
         }
 
-        loadPost(this, tag, "1", true)
+        loadData(tag, 1, 1)
 
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        val configSp = getSharedPreferences("com.lsper.view_preferences", 0)
-        val nowMode = configSp.getString("mode", "Safe")
-        val saveName = configSp.getString("sourceName", null)
-        if (saveName != nowSourceName || nowMode != safeMode) {
-            if (nowMode != safeMode) {
-                safeMode = nowMode
-            }
 
-            loadPost(this, searchTag, nowPage.toString(), true)
-        }
-    }
+    //设置列表数据
+    private fun loadData(tags: String?,page: Int,type:Int){
+        //缓存搜索的tags
+        this.tags = tags
 
-    private lateinit var mOnResponse: onResponseListener
+        Log.e(TAG,"now page is $page")
 
-    interface onResponseListener {
-        fun response(list: ArrayList<Post>)
-    }
-
-    fun setResponseListener(mOnResponse: onResponseListener) {
-        this.mOnResponse = mOnResponse
-
-    }
-
-
-    /**
-     * 加载画廊
-     * @param source 加载源
-     * @param tags 标签
-     * @param page 页数
-     */
-    private fun requestPost(context: Context, tags: String?, page: String) {
-        Log.e("page", page)
         val swipeRefreshLayout =
             findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
                 R.id.swipeRefreshLayout
             )
         swipeRefreshLayout.isRefreshing = true
 
-        var postList: ArrayList<Post> = ArrayList()
+        //读取配置
         val configSp = getSharedPreferences("com.lsper.view_preferences", 0)
-        for ((index, name) in sourceName.withIndex()) {
-            if (name == configSp.getString("sourceName", null)) {
-                nowSourceName = configSp.getString("sourceName", null)
-                source = sourceUrl[index]
+        val nowSourceName: String? = configSp.getString("sourceName",null)
+        var source = ""
+        for ((index,sourceName) in sourceNameArray.withIndex()){
+            if (sourceName == nowSourceName){
+                source = sourceUrlArray[index]
             }
         }
 
+        //接收异步信息
+        val handler = object : Handler(Looper.myLooper()!!){
+            override fun handleMessage(msg: Message) {
+                super.handleMessage(msg)
+                when (msg.what){
+                    0 -> {
+                        if (type == 1 )
+                        //刷新数据
+                            adapter.refreshData(msg.obj as ArrayList<Post>)
+                        else
+                        //加载数据
+                            adapter.addData(msg.obj as ArrayList<Post>)
 
-        val postService: PostService = if (source != null) {
-            ServiceCreator.create<PostService>(source)
-        } else {
-            ServiceCreator.create<PostService>("https://yande.re/")
-        }
-        var service: Call<ArrayList<Post>>
-//        if (tyep.equals("0")){
-        service = postService.getPostData("100", tags, page)
-//        }else{
-//            service =  postService.getPostData_php("dapi","post","index","100",tags,"1",nowPage.toString())
-//        }
-
-        service.enqueue(object : Callback<ArrayList<Post>> {
-            override fun onFailure(call: Call<ArrayList<Post>>, t: Throwable) {
-                val fbtn =
-                    findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
-                        R.id.fbtn
-                    )
-                Snackbar.make(fbtn, "请检查网络连接", Snackbar.LENGTH_LONG).show()
-                val handler = Handler()
-                handler.postDelayed({ requestPost(context, tags, page) }, 3000)
-            }
-
-            override fun onResponse(
-                call: Call<ArrayList<Post>>,
-                response: Response<ArrayList<Post>>
-            ) {
-
-
-                val swipeRefreshLayout =
-                    findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
-                        R.id.swipeRefreshLayout
-                    )
-                val list = response.body()
-
-                if (list != null && list.size >= 1) {
-                    if (safeMode.equals("Safe")) {
-                        for (post in list) {
-                            if (post.rating == "s") {
-                                postList.add(post)
-                            }
-                        }
-                    } else if (safeMode.equals("Questionable")) {
-                        for (post in list) {
-                            if (post.rating != "e") {
-                                postList.add(post)
-                            }
-                        }
-                    } else if (safeMode.equals("Explicit")) {
-                        postList = list
                     }
-
-                } else {
-                    swipeRefreshLayout.isRefreshing = false
-                    Snackbar.make(swipeRefreshLayout, "只有这么多了哦", Snackbar.LENGTH_SHORT).show()
-                    Log.w(TAG, "post is null")
-                    return
+                    1 -> {
+                        Snackbar.make(swipeRefreshLayout,"网络连接失败",Snackbar.LENGTH_SHORT).show()
+                    }
                 }
-                if (tags?.split(":")?.get(0).equals("id")){
-                    PicActivity.actionStartActivity(context,postList[0].id,postList[0].sample_url,
-                        postList[0].file_url,postList[0].tags,postList[0].file_ext,
-                        postList[0].author,postList[0].file_size)
-                }
-
-                mOnResponse.response(postList)
 
                 swipeRefreshLayout.isRefreshing = false
 
             }
-        })
+        }
 
+        MainActivityModelImpl().requestPostList(handler,source,tags,page,configSp.getBoolean("safe_mode",true))
 
-    }
-
-    private fun loadPost(context: Context, tags: String?, page: String, isRefresh: Boolean) {
-        this.tags = tags
-
-        setResponseListener(object : onResponseListener {
-            override fun response(list: ArrayList<Post>) {
-                recyclerView.adapter = SlideInBottomAnimationAdapter(adapter)
-
-                if (isRefresh) {
-                    adapter.refreshData(list)
-                }
-
-
-            }
-
-        })
-
-        requestPost(context, tags, page)
     }
 
 }
