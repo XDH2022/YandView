@@ -47,6 +47,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
@@ -102,7 +103,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         app:tint="@android:color/white"
-        android:backgroundTint="?android:colorAccent"
+        android:backgroundTint="?attr/colorPrimary"
         android:layout_margin="16dp"
         android:contentDescription="Download"
         android:id="@+id/fbtn"/>

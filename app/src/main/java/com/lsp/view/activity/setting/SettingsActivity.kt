@@ -13,10 +13,6 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
 
-        //ToolBar
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()

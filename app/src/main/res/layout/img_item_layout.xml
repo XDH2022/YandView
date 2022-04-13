@@ -5,11 +5,14 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="4dp"
-    android:layout_margin="3dp"
+    android:layout_margin="5dp"
+    style="?attr/materialCardViewElevatedStyle"
     android:layout_height="wrap_content">
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:id="@+id/picImgae"/>
+
 </com.google.android.material.card.MaterialCardView>

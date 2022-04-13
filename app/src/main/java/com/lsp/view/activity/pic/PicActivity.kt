@@ -76,21 +76,9 @@ class PicActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        supportActionBar?.hide()
         super.onCreate(savedInstanceState)
         //看不懂的硬编码 导航栏全透明
-        window.requestFeature(Window.FEATURE_NO_TITLE)
-        val window = window
-        window.clearFlags(
-            WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                    or WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
-        )
-        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = Color.TRANSPARENT
-        window.navigationBarColor = Color.TRANSPARENT
-
 
         setContentView(R.layout.activity_pic)
         val serviceIntent = Intent(this, DownloadService::class.java)

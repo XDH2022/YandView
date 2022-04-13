@@ -37,6 +37,7 @@ import retrofit2.Response
 import java.lang.NumberFormatException
 import java.util.*
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.material.color.DynamicColors
 import com.lsp.view.activity.model.MainActivityModelImpl
 import kotlin.collections.ArrayList
 
@@ -66,11 +67,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-
         adapter = PostAdapter(this, ArrayList<Post>())
 
         //到达底部，加载更多数据
