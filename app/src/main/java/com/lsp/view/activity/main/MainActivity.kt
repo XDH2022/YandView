@@ -68,6 +68,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         adapter = PostAdapter(this, ArrayList<Post>())
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
 
         //到达底部，加载更多数据
         adapter.setLoadMoreListener(object : PostAdapter.OnLoadMoreListener {
