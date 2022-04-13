@@ -98,15 +98,15 @@
 
     </androidx.core.widget.NestedScrollView>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:src="@drawable/save"
+        android:id="@+id/fbtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        app:tint="@android:color/white"
-        android:backgroundTint="?attr/colorPrimary"
         android:layout_margin="16dp"
-        android:contentDescription="Download"
-        android:id="@+id/fbtn"/>
+        android:layout_gravity="bottom|end"
+        app:tint="?attr/colorPrimary"
+        android:elevation="5dp"
+        android:src="@drawable/save"
+        android:contentDescription="Download" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

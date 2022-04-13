@@ -24,8 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:layout_gravity="bottom|end"
-            android:backgroundTint="?android:colorAccent"
-            app:tint="@android:color/white"
+            app:tint="?attr/colorPrimary"
             android:elevation="5dp"
             android:src="@drawable/search"
             android:contentDescription="Search" />
@@ -47,6 +46,7 @@
 
 
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:visibility="gone"
         android:id="@+id/search_bar"
         android:orientation="horizontal"
@@ -62,8 +62,9 @@
             android:elevation="15dp"
             app:cardCornerRadius="3dp"
             android:id="@+id/editCard"
-            android:layout_marginTop="60dp"
-            android:layout_height="wrap_content">
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_height="50dp"
+            >
             <EditText
 
                 android:background="@null"
@@ -71,17 +72,18 @@
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
                 android:paddingStart="10dp"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="50dp"
                 android:id="@+id/search"/>
             <View
-                android:layout_margin="15dp"
                 android:id="@+id/close"
                 android:layout_gravity="end"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/close"/>
+                android:layout_width="35dp"
+                android:layout_margin="10dp"
+                android:layout_height="35dp"
+                app:tint="?attr/colorPrimary"
+                android:background="@drawable/ic_baseline_close_24"/>
         </com.google.android.material.card.MaterialCardView>
         <View
             android:layout_width="0dp"
