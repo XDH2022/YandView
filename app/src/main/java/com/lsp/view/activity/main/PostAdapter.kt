@@ -50,9 +50,16 @@ class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
             Log.w("position", position.toString())
             Log.w("url", postList[position].sample_url)
             Log.w("rating", postList[position].rating)
+            var file_ext = postList[position].file_ext
+
+            if (file_ext == null){
+                val strarr = postList[position].sample_url.split(".")
+                file_ext = strarr[strarr.lastIndex]
+                Log.e("file_ext",file_ext)
+            }
 
             PicActivity.actionStartActivity(context,postList[position].id,postList[position].sample_url,
-                postList[position].file_url,postList[position].tags,postList[position].file_ext,
+                postList[position].file_url,postList[position].tags,file_ext,
                 postList[position].author,postList[position].file_size)
         }
 
