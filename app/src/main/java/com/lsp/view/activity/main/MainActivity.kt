@@ -59,6 +59,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private var barShow = false
     private var tags: String? = ""
+    private final var ISREFRESH = 1
+    private final var ISADDDATA = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         adapter.setLoadMoreListener(object : PostAdapter.OnLoadMoreListener {
             //重写接口
             override fun loadMore(position: Int) {
-                loadData(tags,++nowPage,0)
+                loadData(tags,++nowPage,ISADDDATA)
 
 
             }
@@ -126,7 +128,7 @@ class MainActivity : AppCompatActivity() {
             searchAction(searchTag)
         } else {
             //初次启动
-            loadData( tags,1,0)
+            loadData( tags,1,ISADDDATA)
         }
 
         val close = findViewById<View>(R.id.close)
@@ -170,7 +172,7 @@ class MainActivity : AppCompatActivity() {
         //刷新
         swipeRefreshLayout.setOnRefreshListener {
             nowPage = 1
-            loadData( searchTag, nowPage, 1)
+            loadData( searchTag, nowPage, ISREFRESH)
         }
 
         //侧边栏
@@ -191,7 +193,7 @@ class MainActivity : AppCompatActivity() {
                         alterEditDialog()
                     } else {
                         Log.e("username", username.toString())
-                        loadData( "vote:3:$username order:vote", 1, 1)
+                        loadData( "vote:3:$username order:vote", 1, ISREFRESH)
                         drawerLayout.closeDrawers()
                     }
 
@@ -199,7 +201,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 //画廊
                 R.id.photo -> {
-                    loadData( null, 1, 1)
+                    loadData( null, 1, ISREFRESH)
                     drawerLayout.closeDrawers()
                     searchTag = ""
                     true
@@ -230,12 +232,12 @@ class MainActivity : AppCompatActivity() {
         //加载源改变
         val configSp = getSharedPreferences("com.lsper.view_preferences", 0)
         if (nowSourceName != configSp.getString("sourceName",null)){
-            loadData(tags,1,1)
+            loadData(tags,1,ISREFRESH)
             nowSourceName = configSp.getString("sourceName",null)
         }
 
         if (safeMode != configSp.getBoolean("safe_mode",true)){
-            loadData(tags,1,1)
+            loadData(tags,1,ISREFRESH)
             safeMode = configSp.getBoolean("safe_mode",true)
         }
 
@@ -254,7 +256,7 @@ class MainActivity : AppCompatActivity() {
                 if (et.text.toString() != "") {
                     val sharedPreferences = getSharedPreferences("username", 0).edit()
                     sharedPreferences.putString("username", et.text.toString()).apply()
-                    loadData( "vote:3:$username order:vote", 1, 1)
+                    loadData( "vote:3:$username order:vote", 1, ISREFRESH)
                     drawerLayout.closeDrawers()
                 } else {
                     Snackbar.make(drawerLayout, "用户名不能为空！", Snackbar.LENGTH_SHORT).show()
@@ -323,7 +325,7 @@ class MainActivity : AppCompatActivity() {
             tag = "id:"+tags
         }
 
-        loadData(tag, 1, 1)
+        loadData(tag, 1, ISREFRESH)
 
 
     }
@@ -358,10 +360,10 @@ class MainActivity : AppCompatActivity() {
                 super.handleMessage(msg)
                 when (msg.what){
                     0 -> {
-                        if (type == 1 )
+                        if (type == ISREFRESH )
                         //刷新数据
                             adapter.refreshData(msg.obj as ArrayList<Post>)
-                        else
+                        else if (type == ISADDDATA)
                         //加载数据
                             adapter.addData(msg.obj as ArrayList<Post>)
 
