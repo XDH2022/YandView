@@ -78,7 +78,6 @@ class PicActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         supportActionBar?.hide()
         super.onCreate(savedInstanceState)
-        //看不懂的硬编码 导航栏全透明
 
         setContentView(R.layout.activity_pic)
         val serviceIntent = Intent(this, DownloadService::class.java)
