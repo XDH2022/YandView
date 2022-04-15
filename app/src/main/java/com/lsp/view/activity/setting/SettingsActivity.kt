@@ -5,13 +5,23 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.preference.PreferenceFragmentCompat
+import com.google.android.material.appbar.AppBarLayout
+import com.lsp.view.MyApplication
 import com.lsp.view.R
+import com.lsp.view.activity.BaseActivity
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        val appbar = findViewById<AppBarLayout>(R.id.appbar)
+        val nowHeight = appbar.layoutParams.height
+        appbar.layoutParams.height = (application as MyApplication).statusBarHeight()+nowHeight
 
         if (savedInstanceState == null) {
             supportFragmentManager

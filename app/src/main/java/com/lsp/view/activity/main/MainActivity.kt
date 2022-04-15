@@ -5,16 +5,15 @@ import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
+import android.os.*
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -38,17 +37,21 @@ import java.lang.NumberFormatException
 import java.util.*
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.color.DynamicColors
+import com.lsp.view.activity.BaseActivity
 import com.lsp.view.activity.model.MainActivityModelImpl
 import kotlin.collections.ArrayList
+import android.widget.Toast
+import com.google.android.material.appbar.AppBarLayout
+import com.lsp.view.MyApplication
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private var searchTag: String? = null
     private lateinit var search: EditText
     private lateinit var searchBar: LinearLayout
     private var shortAnnotationDuration: Int = 0
     private var nowPage = 1
-    private lateinit var adapter: PostAdapter
+    private val adapter: PostAdapter = PostAdapter(this, ArrayList<Post>())
     private var username: String? = ""
     private lateinit var sourceUrlArray: Array<String>
     private lateinit var sourceNameArray: Array<String>
@@ -60,17 +63,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private var barShow = false
     private var tags: String? = ""
-    private final var ISREFRESH = 1
-    private final var ISADDDATA = 0
+    private val ISREFRESH = 1
+    private val ISADDDATA = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        adapter = PostAdapter(this, ArrayList<Post>())
+
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-
+        val appbar = findViewById<AppBarLayout>(R.id.appbar)
+        val nowHeight = appbar.layoutParams.height
+        appbar.layoutParams.height = (application as MyApplication).statusBarHeight()+nowHeight
 
         //到达底部，加载更多数据
         adapter.setLoadMoreListener(object : PostAdapter.OnLoadMoreListener {
@@ -106,11 +111,6 @@ class MainActivity : AppCompatActivity() {
 
 
         //收藏Tag
-
-        val fbtn =
-            findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
-                R.id.fbtn
-            )
         val swipeRefreshLayout =
             findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
                 R.id.swipeRefreshLayout
@@ -153,20 +153,6 @@ class MainActivity : AppCompatActivity() {
             return@setOnEditorActionListener false
         }
 
-        fbtn.setOnClickListener {
-
-            if (barShow) {
-                searchTag = search.text.toString()
-                searchAction(searchTag)
-                hiddenSearchBar()
-                hideIm(search)
-
-            }
-
-            if (searchBar.visibility == View.GONE) {
-                showSearchBar()
-            }
-        }
 
         //刷新
         swipeRefreshLayout.setOnRefreshListener {
@@ -185,19 +171,6 @@ class MainActivity : AppCompatActivity() {
         //设置侧边栏点击逻辑
         nav.setNavigationItemSelectedListener {
             when (it.itemId) {
-                //收藏夹
-                R.id.fav -> {
-                    Log.w(TAG, username.toString())
-                    if (username == null || username == "") {
-                        alterEditDialog()
-                    } else {
-                        Log.e("username", username.toString())
-                        loadData( "vote:3:$username order:vote", 1, ISREFRESH)
-                        drawerLayout.closeDrawers()
-                    }
-
-                    true
-                }
                 //画廊
                 R.id.photo -> {
                     loadData( null, 1, ISREFRESH)
@@ -293,9 +266,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
         when (item.itemId) {
-            android.R.id.home -> drawerLayout.openDrawer(GravityCompat.START)
+            android.R.id.home -> {
+                val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+                drawerLayout.openDrawer(GravityCompat.START)
+            }
+            R.id.search_nav -> {
+                if (barShow) {
+                    searchTag = search.text.toString()
+                    searchAction(searchTag)
+                    hiddenSearchBar()
+                    hideIm(search)
+
+                }
+
+                if (searchBar.visibility == View.GONE) {
+                    showSearchBar()
+                }
+            }
         }
         return true
     }
@@ -380,5 +368,15 @@ class MainActivity : AppCompatActivity() {
         MainActivityModelImpl().requestPostList(handler,source,tags,page,configSp.getBoolean("safe_mode",true))
 
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu);
+        return true
+    }
+
+
+
+
+
 
 }

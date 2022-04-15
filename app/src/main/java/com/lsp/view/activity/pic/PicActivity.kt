@@ -35,6 +35,7 @@ import com.github.chrisbanes.photoview.PhotoView
 import com.google.android.flexbox.*
 import com.google.android.material.snackbar.Snackbar
 import com.lsp.view.R
+import com.lsp.view.activity.BaseActivity
 import com.lsp.view.activity.main.MainActivity
 import com.lsp.view.bean.Author
 import com.lsp.view.bean.ID
@@ -45,7 +46,7 @@ import java.io.File
 import kotlin.concurrent.thread
 import kotlin.properties.Delegates
 
-class PicActivity : AppCompatActivity() {
+class PicActivity : BaseActivity() {
 
 
     private val tagList = ArrayList<Tags>()
