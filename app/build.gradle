@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.lsper.view"
-        minSdkVersion 25
+        minSdkVersion 29
         targetSdkVersion 32
         versionCode 11010101
         versionName "1.2.5"
