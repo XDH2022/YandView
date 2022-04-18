@@ -5,11 +5,11 @@ plugins {
 
 android {
     compileSdkVersion 32
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.lsper.view"
-        minSdkVersion 29
+        minSdkVersion 21
         targetSdkVersion 32
         versionCode 11010101
         versionName "1.2.5"
