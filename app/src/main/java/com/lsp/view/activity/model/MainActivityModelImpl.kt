@@ -16,8 +16,6 @@ class MainActivityModelImpl :MainActivityModel {
 
     override fun requestPostList(handler: Handler, source: String, tage: String?, page: Int,safeMode: Boolean){
 
-        val list = ArrayList<Post>()
-
         val postService:PostService = ServiceCreator.create(source)
         val service: Call<ArrayList<Post>> = postService.getPostData("100",tage, page)
 
@@ -38,20 +36,16 @@ class MainActivityModelImpl :MainActivityModel {
 
                 }
                 if (safeMode){
-                    if (getValue != null) {
-                        for (item in getValue){
-                            if (item.rating == "s")
-                                list.add(item)
-                        }
-                    }
-                }else {
-                    if (getValue != null) {
-                        list.addAll(getValue)
+                    val iter = getValue?.iterator()
+                    while (iter?.hasNext() == true){
+                        val post = iter.next()
+                        if (post.rating != "s")
+                            iter.remove()
                     }
                 }
                 val msg = Message.obtain()
                 msg.what = 0
-                msg.obj = list
+                msg.obj = getValue
                 handler.sendMessage(msg)
 
             }
