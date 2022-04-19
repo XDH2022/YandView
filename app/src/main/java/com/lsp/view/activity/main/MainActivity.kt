@@ -346,6 +346,10 @@ class MainActivity : BaseActivity() {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
                 when (msg.what){
+                    -1 ->{
+                        Snackbar.make(swipeRefreshLayout,"未找到内容",Snackbar.LENGTH_SHORT).show()
+                        search.setText("")
+                    }
                     0 -> {
                         if (type == ISREFRESH )
                         //刷新数据

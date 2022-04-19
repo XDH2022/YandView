@@ -29,6 +29,14 @@ class MainActivityModelImpl :MainActivityModel {
                 response: Response<ArrayList<Post>>
             ) {
                 val getValue = response.body()
+                if (getValue?.size==0){
+                    Log.w(TAG,"Don't get value.")
+                    val msg = Message.obtain()
+                    msg.what = -1
+                    handler.sendMessage(msg)
+                    return
+
+                }
                 if (safeMode){
                     if (getValue != null) {
                         for (item in getValue){
@@ -41,12 +49,6 @@ class MainActivityModelImpl :MainActivityModel {
                         list.addAll(getValue)
                     }
                 }
-
-                if (list.size<=0){
-                    Log.w(TAG,"Don't get value.")
-                    return
-                }
-
                 val msg = Message.obtain()
                 msg.what = 0
                 msg.obj = list
