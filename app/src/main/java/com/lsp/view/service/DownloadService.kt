@@ -39,8 +39,8 @@ class DownloadService : Service() {
 
                         //通知媒体更新
                         MediaScannerConnection.scanFile(
-                            context, arrayOf(FileD.toString()),
-                            arrayOf(FileD.name.toString()), null
+                            context, arrayOf(file.path),
+                            null, null
                         )
 
                         return true
