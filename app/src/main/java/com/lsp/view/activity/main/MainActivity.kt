@@ -41,6 +41,8 @@ import com.lsp.view.activity.BaseActivity
 import com.lsp.view.activity.model.MainActivityModelImpl
 import kotlin.collections.ArrayList
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat.Type.ime
 import com.google.android.material.appbar.AppBarLayout
 import com.lsp.view.MyApplication
 
@@ -141,7 +143,7 @@ class MainActivity : BaseActivity() {
         shortAnnotationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
         close.setOnClickListener {
             hiddenSearchBar()
-            hideIm(close)
+            hideIm()
         }
 
         search.setOnEditorActionListener { v, actionId, event ->
@@ -247,13 +249,15 @@ class MainActivity : BaseActivity() {
                     searchBar.visibility = View.GONE
                 }
             })
+        hideIm()
         barShow = false
 
     }
 
     //现实搜索栏
     private fun showSearchBar() {
-
+        val controller = ViewCompat.getWindowInsetsController(window.decorView)
+        controller?.show(ime())
         searchBar.apply {
             alpha = 0f
             visibility = View.VISIBLE
@@ -276,7 +280,7 @@ class MainActivity : BaseActivity() {
                     searchTag = search.text.toString()
                     searchAction(searchTag)
                     hiddenSearchBar()
-                    hideIm(search)
+
 
                 }
 
@@ -289,12 +293,9 @@ class MainActivity : BaseActivity() {
     }
 
 
-    private fun hideIm(v: View) {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-
-        if (imm.isActive) {
-            imm.hideSoftInputFromWindow(v.applicationWindowToken, 0)
-        }
+    private fun hideIm() {
+        val controller = ViewCompat.getWindowInsetsController(window.decorView)
+        controller?.hide(ime())
     }
 
     //执行搜索
