@@ -244,7 +244,6 @@ class MainActivity : BaseActivity() {
     //现实搜索栏
     private fun showSearchBar() {
         val controller = ViewCompat.getWindowInsetsController(window.decorView)
-        controller?.show(ime())
         searchBar.apply {
             alpha = 0f
             visibility = View.VISIBLE
