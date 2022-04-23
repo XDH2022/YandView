@@ -2,49 +2,36 @@ package com.lsp.view.activity.main
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.*
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import com.hentai.yandeview.Retrofit.PostService
-import com.hentai.yandeview.Retrofit.ServiceCreator
 import com.lsp.view.R
 import com.lsp.view.activity.favtag.FavTagActivity
-import com.lsp.view.activity.pic.PicActivity
 import com.lsp.view.activity.setting.SettingsActivity
-import com.lsp.view.bean.Post
-import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.lsp.view.bean.Post_yand
 import java.lang.NumberFormatException
 import java.util.*
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.google.android.material.color.DynamicColors
 import com.lsp.view.activity.BaseActivity
 import com.lsp.view.activity.model.MainActivityModelImpl
 import kotlin.collections.ArrayList
-import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat.Type.ime
 import com.google.android.material.appbar.AppBarLayout
 import com.lsp.view.MyApplication
+import com.lsp.view.util.Code
 
 
 class MainActivity : BaseActivity() {
@@ -53,7 +40,7 @@ class MainActivity : BaseActivity() {
     private lateinit var searchBar: LinearLayout
     private var shortAnnotationDuration: Int = 0
     private var nowPage = 1
-    private val adapter: PostAdapter = PostAdapter(this, ArrayList<Post>())
+    private val adapter: PostAdapter = PostAdapter(this, ArrayList<Post_yand>())
     private var username: String? = ""
     private lateinit var sourceUrlArray: Array<String>
     private lateinit var sourceNameArray: Array<String>
@@ -347,20 +334,20 @@ class MainActivity : BaseActivity() {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
                 when (msg.what){
-                    -1 ->{
+                    Code.DATAISNULL ->{
                         Snackbar.make(swipeRefreshLayout,"未找到内容",Snackbar.LENGTH_SHORT).show()
                         search.setText("")
                     }
-                    0 -> {
+                    Code.OK -> {
                         if (type == ISREFRESH )
                         //刷新数据
-                            adapter.refreshData(msg.obj as ArrayList<Post>)
+                            adapter.refreshData(msg.obj as ArrayList<Post_yand>)
                         else if (type == ISADDDATA)
                         //加载数据
-                            adapter.addData(msg.obj as ArrayList<Post>)
+                            adapter.addData(msg.obj as ArrayList<Post_yand>)
 
                     }
-                    1 -> {
+                    Code.NETWORKERROR -> {
                         Snackbar.make(swipeRefreshLayout,"网络连接失败",Snackbar.LENGTH_SHORT).show()
                     }
                 }

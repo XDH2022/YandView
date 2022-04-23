@@ -1,12 +1,10 @@
 package com.lsp.view.activity.main
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -14,12 +12,10 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.lsp.view.R
 import com.lsp.view.activity.pic.PicActivity
-import com.lsp.view.bean.Post
-import android.os.Build
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import com.lsp.view.bean.Post_yand
 
 
-class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
+class PostAdapter(val context: Context, private var postYandList: ArrayList<Post_yand>) :
     RecyclerView.Adapter<PostAdapter.ViewHolder>() {
     val TAG = this::class.java.simpleName
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -27,18 +23,18 @@ class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
 
     }
 
-    fun addData(list: ArrayList<Post>) {
-        val pos = postList.size
-        postList.addAll(list)
+    fun addData(list: ArrayList<Post_yand>) {
+        val pos = postYandList.size
+        postYandList.addAll(list)
         notifyItemRangeInserted(pos, list.size)
     }
 
-    fun refreshData(list: ArrayList<Post>) {
+    fun refreshData(list: ArrayList<Post_yand>) {
 
-        val oldSize = postList.size
-        postList.clear()
+        val oldSize = postYandList.size
+        postYandList.clear()
         notifyItemRangeRemoved(0,oldSize)
-        postList.addAll(list)
+        postYandList.addAll(list)
         notifyItemRangeInserted(0, list.size)
     }
 
@@ -48,19 +44,19 @@ class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
         viewHolder.picImage.setOnClickListener {
             val position = viewHolder.adapterPosition
             Log.w("position", position.toString())
-            Log.w("url", postList[position].sample_url)
-            Log.w("rating", postList[position].rating)
-            var file_ext = postList[position].file_ext
+            Log.w("url", postYandList[position].sample_url)
+            Log.w("rating", postYandList[position].rating)
+            var file_ext = postYandList[position].file_ext
 
             if (file_ext == null){
-                val strarr = postList[position].sample_url.split(".")
+                val strarr = postYandList[position].sample_url.split(".")
                 file_ext = strarr[strarr.lastIndex]
                 Log.e("file_ext",file_ext)
             }
 
-            PicActivity.actionStartActivity(context,postList[position].id,postList[position].sample_url,
-                postList[position].file_url,postList[position].tags,file_ext,
-                postList[position].author,postList[position].file_size)
+            PicActivity.actionStartActivity(context,postYandList[position].id,postYandList[position].sample_url,
+                postYandList[position].file_url,postYandList[position].tags,file_ext,
+                postYandList[position].author,postYandList[position].file_size)
         }
 
         return viewHolder
@@ -78,7 +74,7 @@ class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val post = postList[position]
+        val post = postYandList[position]
         //TODO 增加XML解析 节省流量
         val glideUrl: GlideUrl
         var source: String = post.sample_url
@@ -90,9 +86,9 @@ class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
             ).build()
         )
-        holder.picImage.layoutParams.height = postList[position].sample_height
+        holder.picImage.layoutParams.height = postYandList[position].sample_height
         Glide.with(context).load(glideUrl).into(holder.picImage)
-        if (position == postList.size - 1 && postList.size > 6) {
+        if (position == postYandList.size - 1 && postYandList.size > 6) {
             //到达底部
             mLoadMoreListener.loadMore(position)
         }
@@ -100,7 +96,7 @@ class PostAdapter(val context: Context, private var postList: ArrayList<Post>) :
     }
 
     override fun getItemCount(): Int {
-        return postList.size
+        return postYandList.size
     }
 
 

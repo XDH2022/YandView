@@ -1,15 +1,8 @@
 package com.lsp.view.bean
 
-class Post(
-    val preview_url: String,
-    val file_url: String,
+open class Post(
     val id: String,
-    val sample_url: String,
     val rating: String,
-    val tags: String,
-    val file_ext: String,
     val author: String,
-    val file_size: String,
-    val sample_height : Int,
-    val sample_width: Int
-)
+    ) {
+}
