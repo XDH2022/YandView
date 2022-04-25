@@ -54,7 +54,7 @@ class MainActivityModelImpl :MainActivityModel {
                         return
                     }
                     if (safeMode) {
-                        val iter = getValue!!.iterator()
+                        val iter = getValue.iterator()
                         while (iter.hasNext()) {
                             val post = iter.next()
                             if (post.rating != "s")
@@ -62,7 +62,7 @@ class MainActivityModelImpl :MainActivityModel {
                         }
                     }
 
-                    sendData(getValue!!,handler)
+                    sendData(getValue,handler)
                 }
 
             }
