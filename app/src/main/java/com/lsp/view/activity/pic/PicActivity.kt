@@ -1,5 +1,6 @@
 package com.lsp.view.activity.pic
 
+import android.Manifest.permission.SET_WALLPAPER
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.ComponentName
@@ -7,23 +8,20 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
-import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Bundle
-import android.os.Environment
-import android.os.IBinder
-import android.os.Looper
+import android.net.Uri
+import android.os.*
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -42,9 +40,10 @@ import com.lsp.view.bean.ID
 import com.lsp.view.bean.Size
 import com.lsp.view.bean.Tags
 import com.lsp.view.service.DownloadService
+import com.lsp.view.util.Code.*
 import java.io.File
-import kotlin.concurrent.thread
 import kotlin.properties.Delegates
+
 
 class PicActivity : BaseActivity() {
 
@@ -125,9 +124,9 @@ class PicActivity : BaseActivity() {
 
         val file_url = intent.getStringExtra("file_url")
         val file_ext = intent.getStringExtra("file_ext")
-        val fbtn =
-            findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
-                R.id.fbtn
+        val download =
+            findViewById<View>(
+                R.id.download
             )
 
         val path =
@@ -160,43 +159,41 @@ class PicActivity : BaseActivity() {
                     }
                 })
         }
+        val share = findViewById<View>(R.id.share)
+        share.setOnClickListener {
+            val sendIntent = Intent()
+            sendIntent.action = Intent.ACTION_SEND
+            sendIntent.putExtra(Intent.EXTRA_TEXT, file_url)
+            sendIntent.type = "text/plain"
+            startActivity(Intent.createChooser(sendIntent, "share"))
 
-        fbtn.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) !=
-                PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    1
-                )
-            } else {
-                if (file_url != null) {
-                    if (file_ext != null) {
-                        downloadAction(file_url, file_ext)
-                    }
-                }
-            }
+        }
+
+        download.setOnClickListener {
+            Toast.makeText(this, "开始保存", Toast.LENGTH_SHORT).show()
+            download(file_url,file_ext)
+
         }
     }
 
-    private fun downloadAction(file_url: String, file_ext: String) {
-        Toast.makeText(this, "开始保存", Toast.LENGTH_SHORT).show()
-        thread {
-            Looper.prepare()
-
-            if (downloadBinder.downloadPic(file_url, file_ext)) {
-                Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show()
-                Log.w("Save", "Saved")
-            } else {
-                Toast.makeText(this, "下载异常", Toast.LENGTH_SHORT).show()
-
+    private fun download(file_url: String?, file_ext: String?){
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                1
+            )
+        } else {
+            if (file_url != null) {
+                if (file_ext != null) {
+                    downloadBinder.downloadPic(file_url, file_ext,handler)
+                }
             }
-            Looper.loop()
-
         }
     }
 
@@ -222,23 +219,18 @@ class PicActivity : BaseActivity() {
     ) {
         val file_ext = intent.getStringExtra("file_ext")
         val file_url = intent.getStringExtra("file_url")
-        val fbtn =
-            findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
-                R.id.fbtn
+        val download =
+            findViewById<View>(
+                R.id.download
             )
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             1 -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (file_url != null) {
-                        if (file_ext != null) {
-                            downloadAction(file_url, file_ext)
-
-                        }
-                    }
+                    download(file_url, file_ext)
                 } else {
-                    Snackbar.make(fbtn, "该操作必须拥有文件写入权限", Snackbar.LENGTH_SHORT).setAction("授权") {
+                    Snackbar.make(download, "该操作必须拥有文件写入权限", Snackbar.LENGTH_SHORT).setAction("授权") {
                         ActivityCompat.requestPermissions(
                             this,
                             arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
@@ -388,5 +380,25 @@ class PicActivity : BaseActivity() {
             TODO("Not yet implemented")
         }
     }
+
+    val handler = object : Handler(Looper.myLooper()!!){
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            when(msg.what){
+                OK ->{
+                    Toast.makeText(this@PicActivity, "保存成功", Toast.LENGTH_SHORT).show()
+                }
+
+                DOWNLOADERROR -> {
+                    Toast.makeText(this@PicActivity, "下载异常", Toast.LENGTH_SHORT).show()
+
+                }
+            }
+
+            }
+
+
+        }
+
 
 }

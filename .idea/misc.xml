@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.18177083333333333" />
+        <entry key="..\:/Users/Alie/Documents/GitHub/YandView/app/src/main/res/drawable/ic_baseline_arrow_downward_24.xml" value="0.2505" />
         <entry key="..\:/Users/Alie/Documents/GitHub/YandView/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.10208333333333333" />
         <entry key="..\:/Users/Alie/Documents/GitHub/YandView/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.265625" />
         <entry key="..\:/Users/Alie/Documents/GitHub/YandView/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.265625" />
@@ -12,6 +13,7 @@
         <entry key="..\:/Users/Alie/Documents/GitHub/YandView/app/src/main/res/layout/activity_fav_tag.xml" value="0.20018115942028986" />
         <entry key="..\:/Users/Alie/Documents/GitHub/YandView/app/src/main/res/layout/activity_login.xml" value="0.11197916666666667" />
         <entry key="..\:/Users/Alie/Documents/GitHub/YandView/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Alie/Documents/GitHub/YandView/app/src/main/res/layout/activity_pic.xml" value="0.1" />
         <entry key="..\:/Users/Alie/Documents/GitHub/YandView/app/src/main/res/layout/fav_tag_item_layout.xml" value="0.12708333333333333" />
         <entry key="..\:/Users/Alie/Documents/GitHub/YandView/app/src/main/res/layout/fragment_post.xml" value="0.19429347826086957" />
         <entry key="..\:/Users/Alie/Documents/GitHub/YandView/app/src/main/res/layout/nav_header.xml" value="0.20018115942028986" />
