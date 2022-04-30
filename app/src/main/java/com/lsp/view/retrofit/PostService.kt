@@ -1,6 +1,5 @@
 package com.hentai.yandeview.Retrofit
 
-import com.lsp.view.bean.Post
 import com.lsp.view.bean.Post_yand
 import retrofit2.Call
 import retrofit2.http.GET
@@ -13,15 +12,4 @@ interface PostService {
         @Query("tags") tags: String?,
         @Query("page") page: Int
     ): Call<ArrayList<Post_yand>>
-
-    @GET("index.php")
-    fun getPostData_php(
-        @Query("page") page: String,
-        @Query("s") s: String,
-        @Query("q") q: String,
-        @Query("limit") limit: String,
-        @Query("tags") tags: String?,
-        @Query("json") json: String,
-        @Query("pid") pid: String
-    ): Call<ArrayList<Post>>
 }

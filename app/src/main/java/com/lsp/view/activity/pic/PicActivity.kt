@@ -132,11 +132,6 @@ class PicActivity : BaseActivity() {
                 R.id.download
             )
 
-        val path =
-            "${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/" +
-                    "${time}.$file_ext"
-
-
         photoView = findViewById<PhotoView>(R.id.photoView)
 
         image.setOnClickListener {

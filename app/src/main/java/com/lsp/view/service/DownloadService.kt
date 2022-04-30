@@ -6,7 +6,6 @@ import android.content.Intent
 import android.media.MediaScannerConnection
 import android.os.*
 import android.util.Log
-import com.lsp.view.bean.Post
 import com.lsp.view.util.Code
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -14,7 +13,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.security.MessageDigest
-import java.util.ArrayList
 import kotlin.concurrent.thread
 
 class DownloadService : Service() {
