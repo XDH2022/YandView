@@ -56,7 +56,7 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
 
             PicActivity.actionStartActivity(context,postYandList[position].id,postYandList[position].sample_url,
                 postYandList[position].file_url,postYandList[position].tags,file_ext,
-                postYandList[position].author,postYandList[position].file_size)
+                postYandList[position].author,postYandList[position].file_size,postYandList[position].md5)
         }
 
         return viewHolder

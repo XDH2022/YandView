@@ -57,11 +57,12 @@ class PicActivity : BaseActivity() {
     private lateinit var photoView: PhotoView
     private var shortAnnotationDuration by Delegates.notNull<Int>()
     lateinit var downloadBinder: DownloadService.DownloadBinder
+    private var md5 : String?= null
 
 
     companion object{
         fun actionStartActivity(context: Context,id:String,sample_url:String,file_url:String,tags:String,
-                                file_ext:String,author:String,file_size:String){
+                                file_ext:String,author:String,file_size:String,md5:String){
             val intent=Intent(context,PicActivity::class.java)
             intent.putExtra("id", id)
             intent.putExtra("sample_url", sample_url)
@@ -100,6 +101,7 @@ class PicActivity : BaseActivity() {
         if (file_size != null) {
             loadTags(file_size, "size")
         }
+        md5 = intent.getStringExtra("md5")
 
         val sharedPreferences = getSharedPreferences("FirstRun", 0)
         val firstRun = sharedPreferences.getBoolean("FirstRun", true)
@@ -171,12 +173,12 @@ class PicActivity : BaseActivity() {
 
         download.setOnClickListener {
             Toast.makeText(this, "开始保存", Toast.LENGTH_SHORT).show()
-            download(file_url,file_ext)
+            download(file_url,file_ext,md5)
 
         }
     }
 
-    private fun download(file_url: String?, file_ext: String?){
+    private fun download(file_url: String?, file_ext: String?,md5: String?){
         if (ContextCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -191,7 +193,7 @@ class PicActivity : BaseActivity() {
         } else {
             if (file_url != null) {
                 if (file_ext != null) {
-                    downloadBinder.downloadPic(file_url, file_ext,handler)
+                    downloadBinder.downloadPic(file_url, file_ext,handler,md5)
                 }
             }
         }
@@ -228,7 +230,7 @@ class PicActivity : BaseActivity() {
         when (requestCode) {
             1 -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    download(file_url, file_ext)
+                    download(file_url, file_ext, md5)
                 } else {
                     Snackbar.make(download, "该操作必须拥有文件写入权限", Snackbar.LENGTH_SHORT).setAction("授权") {
                         ActivityCompat.requestPermissions(

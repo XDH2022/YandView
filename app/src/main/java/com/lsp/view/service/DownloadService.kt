@@ -33,15 +33,22 @@ class DownloadService : Service() {
             msg.obj = null
             handler.sendMessage(msg)
         }
-        fun downloadPic(file_url: String, end: String,handler: Handler) {
+        fun downloadPic(file_url: String, end: String,handler: Handler,md5 : String?) {
+
             thread {
-                val time = System.currentTimeMillis()
+                var name: String? = null
+                if (md5==null){
+                    name = System.currentTimeMillis().toString()
+
+                }else{
+                    name = md5
+                }
 
                 val FileD =
                     File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/")
                 if (FileD.exists()) {
                     val file =
-                        File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/$time.$end")
+                        File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/$name.$end")
                     val fos = FileOutputStream(file)
                     try {
 
@@ -80,7 +87,7 @@ class DownloadService : Service() {
 
                 } else {
                     FileD.mkdirs()
-                    downloadPic(file_url, end, handler)
+                    downloadPic(file_url, end, handler,md5)
                 }
                 sendError(handler)
             }

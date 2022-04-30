@@ -12,4 +12,5 @@ class Post_yand(
     id: String,
     rating: String,
     author: String,
+    val md5 : String
 ):Post(id, rating, author)
