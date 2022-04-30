@@ -6,4 +6,5 @@ public class  Code {
     public static final int DATAISNULL = -1;
     public static final int DOWNLOADERROR = -3;
     public static final int SETWP = 100;
+    public static final int MD5ERROR = -4;
 }

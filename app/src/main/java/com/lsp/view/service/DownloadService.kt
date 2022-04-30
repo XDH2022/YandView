@@ -11,7 +11,9 @@ import com.lsp.view.util.Code
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.security.MessageDigest
 import java.util.ArrayList
 import kotlin.concurrent.thread
 
@@ -36,19 +38,11 @@ class DownloadService : Service() {
         fun downloadPic(file_url: String, end: String,handler: Handler,md5 : String?) {
 
             thread {
-                var name: String? = null
-                if (md5==null){
-                    name = System.currentTimeMillis().toString()
-
-                }else{
-                    name = md5
-                }
-
                 val FileD =
                     File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/")
                 if (FileD.exists()) {
                     val file =
-                        File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/$name.$end")
+                        File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/$md5.$end")
                     val fos = FileOutputStream(file)
                     try {
 
@@ -66,7 +60,13 @@ class DownloadService : Service() {
                                 context, arrayOf(file.path),
                                 null, null
                             )
-                            sendOK(file, handler)
+                            if (md5==getFileMD5(file.path)){
+                                sendOK(file, handler)
+                            }else{
+                                file.delete()
+                                sendMD5Error(handler)
+                            }
+
                             return@thread
 
                         } else {
@@ -91,6 +91,61 @@ class DownloadService : Service() {
                 }
                 sendError(handler)
             }
+        }
+
+        /**
+         * 获取文件MD5
+         */
+        fun getFileMD5(path: String?): String? {
+            if (path.isNullOrEmpty()) {
+                return null
+            }
+            var digest: MessageDigest? = null
+            var fileIS: FileInputStream? = null
+            val buffer = ByteArray(1024)
+            var len = 0
+            try {
+                digest = MessageDigest.getInstance("MD5")
+                val oldF = File(path)
+                fileIS = FileInputStream(oldF)
+                while (fileIS.read(buffer).also { len = it } != -1) {
+                    digest.update(buffer, 0, len)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return null
+            }finally {
+                fileIS?.close()
+            }
+            return bytesToHexString(digest?.digest())
+        }
+
+        fun bytesToHexString(src: ByteArray?): String? {
+            val result = StringBuilder("")
+            if (src?.isEmpty()==true) {
+                return null
+            }
+
+            src?.forEach {
+                var i = it.toInt()
+                //这里需要对b与0xff做位与运算，
+                //若b为负数，强制转换将高位位扩展，导致错误，
+                //故需要高位清零
+                val hexStr = Integer.toHexString(i and 0xff)
+                //若转换后的十六进制数字只有一位，
+                //则在前补"0"
+                if (hexStr.length == 1) {
+                    result.append(0)
+                }
+                result.append(hexStr)
+            }
+            return result.toString()
+        }
+        fun sendMD5Error(handler: Handler){
+            val msg = Message.obtain()
+            msg.what = Code.MD5ERROR
+            msg.obj = null
+            handler.sendMessage(msg)
         }
     }
 

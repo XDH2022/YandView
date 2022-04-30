@@ -71,6 +71,7 @@ class PicActivity : BaseActivity() {
             intent.putExtra("file_ext", file_ext)
             intent.putExtra("author", author)
             intent.putExtra("file_size", file_size)
+            intent.putExtra("md5", md5)
             context.startActivity(intent)
 
         }
@@ -393,6 +394,10 @@ class PicActivity : BaseActivity() {
 
                 DOWNLOADERROR -> {
                     Toast.makeText(this@PicActivity, "下载异常", Toast.LENGTH_SHORT).show()
+
+                }
+                MD5ERROR -> {
+                    Toast.makeText(this@PicActivity, "文件下载异常，MD5对比失败", Toast.LENGTH_SHORT).show()
 
                 }
             }
