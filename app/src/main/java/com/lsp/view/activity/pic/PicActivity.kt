@@ -1,6 +1,5 @@
 package com.lsp.view.activity.pic
 
-import android.Manifest.permission.SET_WALLPAPER
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.ComponentName
@@ -175,22 +174,9 @@ class PicActivity : BaseActivity() {
     }
 
     private fun download(file_url: String?, file_ext: String?,md5: String?){
-        if (ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) !=
-            PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                1
-            )
-        } else {
-            if (file_url != null) {
-                if (file_ext != null) {
-                    downloadBinder.downloadPic(file_url, file_ext,handler,md5)
-                }
+        if (file_url != null) {
+            if (file_ext != null) {
+                downloadBinder.downloadPic(file_url, file_ext,handler,md5)
             }
         }
     }
@@ -207,36 +193,6 @@ class PicActivity : BaseActivity() {
                         photoView.visibility = View.GONE
                     }
                 })
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        val file_ext = intent.getStringExtra("file_ext")
-        val file_url = intent.getStringExtra("file_url")
-        val download =
-            findViewById<View>(
-                R.id.download
-            )
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            1 -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    download(file_url, file_ext, md5)
-                } else {
-                    Snackbar.make(download, "该操作必须拥有文件写入权限", Snackbar.LENGTH_SHORT).setAction("授权") {
-                        ActivityCompat.requestPermissions(
-                            this,
-                            arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                            1
-                        )
-                    }.show()
-                }
-            }
         }
     }
 
