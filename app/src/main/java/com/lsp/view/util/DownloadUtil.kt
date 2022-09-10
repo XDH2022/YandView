@@ -35,6 +35,10 @@ object DownloadUtil {
                     Toast.makeText(MyApplication.getContext(), "文件下载异常，MD5对比失败", Toast.LENGTH_SHORT).show()
 
                 }
+                CallBackStatus.FILEEXISTS.ordinal -> {
+                    Toast.makeText(MyApplication.getContext(), "文件已经存在", Toast.LENGTH_SHORT).show()
+
+                }
             }
 
         }

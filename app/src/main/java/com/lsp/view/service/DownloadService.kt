@@ -37,6 +37,13 @@ class DownloadService : Service() {
                 if (FileD.exists()) {
                     val file =
                         File("${Environment.getExternalStorageDirectory()}/${Environment.DIRECTORY_PICTURES}/LspMake/$md5.$end")
+
+                    if (file.exists()){
+                        callBack(handler,CallBackStatus.FILEEXISTS)
+                        Log.e("callback","文件存在")
+                        return@thread
+                    }
+
                     val fos = FileOutputStream(file)
                     try {
 
