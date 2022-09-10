@@ -2,25 +2,15 @@ package com.lsp.view.activity.pic
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
-import android.content.pm.PackageManager
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.*
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -38,8 +28,6 @@ import com.lsp.view.bean.Author
 import com.lsp.view.bean.ID
 import com.lsp.view.bean.Size
 import com.lsp.view.bean.Tags
-import com.lsp.view.service.DownloadService
-import com.lsp.view.util.Code.*
 import com.lsp.view.util.DownloadUtil
 import java.io.File
 import kotlin.properties.Delegates
