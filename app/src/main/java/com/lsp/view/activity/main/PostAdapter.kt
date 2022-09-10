@@ -1,11 +1,15 @@
 package com.lsp.view.activity.main
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
@@ -13,6 +17,8 @@ import com.bumptech.glide.load.model.LazyHeaders
 import com.lsp.view.R
 import com.lsp.view.activity.pic.PicActivity
 import com.lsp.view.bean.Post_yand
+import com.lsp.view.util.DownloadUtil
+import kotlin.math.hypot
 
 
 class PostAdapter(val context: Context, private var postYandList: ArrayList<Post_yand>) :
@@ -20,6 +26,8 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
     val TAG = this::class.java.simpleName
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val picImage: ImageView = view.findViewById<ImageView>(R.id.picImgae)
+        val quick_ctrl: LinearLayout = view.findViewById(R.id.quick_ctrl)
+        val quick_download : ImageView = view.findViewById(R.id.quick_download)
 
     }
 
@@ -86,6 +94,41 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
             ).build()
         )
+
+        holder.picImage.setOnLongClickListener {
+            val cx = holder.picImage.width / 2
+            val cy = holder.picImage.height / 2
+            val radius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+
+            val anim = ViewAnimationUtils.createCircularReveal(holder.quick_ctrl, cx, cy, 0f, radius)
+            holder.quick_ctrl.visibility = View.VISIBLE
+            anim.start()
+
+            true
+        }
+
+        holder.quick_ctrl.setOnClickListener {
+            val cx = holder.picImage.width / 2
+            val cy = holder.picImage.height / 2
+            val radius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+
+            val anim = ViewAnimationUtils.createCircularReveal(holder.quick_ctrl, cx, cy, radius, 0f)
+
+            anim.addListener(object : AnimatorListenerAdapter() {
+
+                override fun onAnimationEnd(animation: Animator) {
+                    super.onAnimationEnd(animation)
+                    holder.quick_ctrl.visibility = View.INVISIBLE
+                }
+            })
+            anim.start()
+
+        }
+
+        holder.quick_download.setOnClickListener {
+            DownloadUtil.download(postYandList[position].file_url,postYandList[position].file_ext,postYandList[position].md5)
+        }
+
         holder.picImage.layoutParams.height = postYandList[position].sample_height
         Glide.with(context).load(glideUrl).into(holder.picImage)
         if (position == postYandList.size - 1 && postYandList.size > 6) {

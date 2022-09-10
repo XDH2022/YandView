@@ -40,6 +40,7 @@ import com.lsp.view.bean.Size
 import com.lsp.view.bean.Tags
 import com.lsp.view.service.DownloadService
 import com.lsp.view.util.Code.*
+import com.lsp.view.util.DownloadUtil
 import java.io.File
 import kotlin.properties.Delegates
 
@@ -55,7 +56,6 @@ class PicActivity : BaseActivity() {
     private lateinit var image: ImageView
     private lateinit var photoView: PhotoView
     private var shortAnnotationDuration by Delegates.notNull<Int>()
-    lateinit var downloadBinder: DownloadService.DownloadBinder
     private var md5 : String?= null
 
 
@@ -81,8 +81,6 @@ class PicActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_pic)
-        val serviceIntent = Intent(this, DownloadService::class.java)
-        bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
 
         image = findViewById<ImageView>(R.id.titleImage)
         shortAnnotationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
@@ -167,17 +165,7 @@ class PicActivity : BaseActivity() {
         }
 
         download.setOnClickListener {
-            Toast.makeText(this, "开始保存", Toast.LENGTH_SHORT).show()
-            download(file_url,file_ext,md5)
-
-        }
-    }
-
-    private fun download(file_url: String?, file_ext: String?,md5: String?){
-        if (file_url != null) {
-            if (file_ext != null) {
-                downloadBinder.downloadPic(file_url, file_ext,handler,md5)
-            }
+            DownloadUtil.download(file_url, file_ext, md5)
         }
     }
 
@@ -319,44 +307,5 @@ class PicActivity : BaseActivity() {
             }
         }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unbindService(connection)
-    }
-
-    private val connection = object : ServiceConnection {
-        override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
-            downloadBinder = p1 as DownloadService.DownloadBinder
-        }
-
-        override fun onServiceDisconnected(p0: ComponentName?) {
-            TODO("Not yet implemented")
-        }
-    }
-
-    val handler = object : Handler(Looper.myLooper()!!){
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-            when(msg.what){
-                OK ->{
-                    Toast.makeText(this@PicActivity, "保存成功", Toast.LENGTH_SHORT).show()
-                }
-
-                DOWNLOADERROR -> {
-                    Toast.makeText(this@PicActivity, "下载异常", Toast.LENGTH_SHORT).show()
-
-                }
-                MD5ERROR -> {
-                    Toast.makeText(this@PicActivity, "文件下载异常，MD5对比失败", Toast.LENGTH_SHORT).show()
-
-                }
-            }
-
-            }
-
-
-        }
-
 
 }
