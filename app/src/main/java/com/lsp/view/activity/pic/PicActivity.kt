@@ -29,6 +29,7 @@ import com.lsp.view.bean.ID
 import com.lsp.view.bean.Size
 import com.lsp.view.bean.Tags
 import com.lsp.view.util.DownloadUtil
+import com.lsp.view.util.ShareUtil
 import java.io.File
 import kotlin.properties.Delegates
 
@@ -144,11 +145,9 @@ class PicActivity : BaseActivity() {
         }
         val share = findViewById<View>(R.id.share)
         share.setOnClickListener {
-            val sendIntent = Intent()
-            sendIntent.action = Intent.ACTION_SEND
-            sendIntent.putExtra(Intent.EXTRA_TEXT, file_url)
-            sendIntent.type = "text/plain"
-            startActivity(Intent.createChooser(sendIntent, "share"))
+            if (sample_url != null) {
+                ShareUtil.share(sample_url,this)
+            }
 
         }
 
