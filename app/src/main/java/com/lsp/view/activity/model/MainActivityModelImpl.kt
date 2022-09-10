@@ -6,11 +6,11 @@ import com.hentai.yandeview.Retrofit.PostService
 import com.hentai.yandeview.Retrofit.ServiceCreator
 import com.lsp.view.bean.Post
 import com.lsp.view.bean.Post_yand
-import com.lsp.view.util.Code
+import com.lsp.view.util.CallBackStatus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
+import kotlin.collections.ArrayList
 
 class MainActivityModelImpl :MainActivityModel {
     private val TAG = this::class.java.simpleName
@@ -20,22 +20,16 @@ class MainActivityModelImpl :MainActivityModel {
         request(service,safeMode, handler)
     }
 
-    fun <T:Post>sendData(value: ArrayList<T>,handler: Handler){
+    fun <T:Post> callBack(handler: Handler,status: CallBackStatus,value:ArrayList<T>){
         val msg = Message.obtain()
-        msg.what = Code.OK
+        msg.what = status.ordinal
         msg.obj = value
         handler.sendMessage(msg)
     }
 
-    fun sendNullMsg(handler: Handler){
+    fun callBack(handler: Handler,status: CallBackStatus){
         val msg = Message.obtain()
-        msg.what = Code.DATAISNULL
-        handler.sendMessage(msg)
-    }
-
-    fun sendConnErrorMsg(handler: Handler){
-        val msg = Message.obtain()
-        msg.what = Code.NETWORKERROR
+        msg.what = status.ordinal
         handler.sendMessage(msg)
     }
 
@@ -50,7 +44,7 @@ class MainActivityModelImpl :MainActivityModel {
 
                 if (getValue!=null) {
                     if (getValue.size==0){
-                        sendNullMsg(handler)
+                        callBack(handler,CallBackStatus.DATAISNULL)
                         return
                     }
                     if (safeMode) {
@@ -61,14 +55,14 @@ class MainActivityModelImpl :MainActivityModel {
                                 iter.remove()
                         }
                     }
+                    callBack(handler,CallBackStatus.OK,getValue)
 
-                    sendData(getValue,handler)
                 }
 
             }
 
             override fun onFailure(call: Call<ArrayList<T>>, t: Throwable) {
-                sendConnErrorMsg(handler)
+                callBack(handler,CallBackStatus.NETWORKERROR)
             }
 
         })

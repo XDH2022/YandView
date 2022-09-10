@@ -3,6 +3,7 @@ package com.lsp.view.util
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.util.Log
 import android.widget.Toast
 import com.lsp.view.MyApplication
 
@@ -22,15 +23,15 @@ object DownloadUtil {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             when(msg.what){
-                Code.OK ->{
+                CallBackStatus.OK.ordinal ->{
                     Toast.makeText(MyApplication.getContext(), "保存成功", Toast.LENGTH_SHORT).show()
                 }
 
-                Code.DOWNLOADERROR -> {
+                CallBackStatus.DOWNLOADERROR.ordinal -> {
                     Toast.makeText(MyApplication.getContext(), "下载异常", Toast.LENGTH_SHORT).show()
 
                 }
-                Code.MD5ERROR -> {
+                CallBackStatus.MD5COMPAREERROR.ordinal -> {
                     Toast.makeText(MyApplication.getContext(), "文件下载异常，MD5对比失败", Toast.LENGTH_SHORT).show()
 
                 }

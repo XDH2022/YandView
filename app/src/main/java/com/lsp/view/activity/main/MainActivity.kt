@@ -29,7 +29,7 @@ import com.lsp.view.activity.favtag.FavTagActivity
 import com.lsp.view.activity.model.MainActivityModelImpl
 import com.lsp.view.activity.setting.SettingsActivity
 import com.lsp.view.bean.Post_yand
-import com.lsp.view.util.Code
+import com.lsp.view.util.CallBackStatus
 
 
 class MainActivity : BaseActivity() {
@@ -331,11 +331,11 @@ class MainActivity : BaseActivity() {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
                 when (msg.what){
-                    Code.DATAISNULL ->{
+                    CallBackStatus.DATAISNULL.ordinal ->{
                         Snackbar.make(swipeRefreshLayout,"未找到内容",Snackbar.LENGTH_SHORT).show()
                         search.setText("")
                     }
-                    Code.OK -> {
+                    CallBackStatus.OK.ordinal -> {
                         if (type == ISREFRESH )
                         //刷新数据
                             adapter.refreshData(msg.obj as ArrayList<Post_yand>)
@@ -344,7 +344,7 @@ class MainActivity : BaseActivity() {
                             adapter.addData(msg.obj as ArrayList<Post_yand>)
 
                     }
-                    Code.NETWORKERROR -> {
+                    CallBackStatus.NETWORKERROR.ordinal -> {
                         Snackbar.make(swipeRefreshLayout,"网络连接失败",Snackbar.LENGTH_SHORT).show()
                     }
                 }

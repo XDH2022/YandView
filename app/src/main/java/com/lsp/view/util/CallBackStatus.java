@@ -1,0 +1,5 @@
+package com.lsp.view.util;
+
+public enum CallBackStatus {
+    OK,NETWORKERROR,DATAISNULL,DOWNLOADERROR,SETWP,MD5COMPAREERROR,FILEEXISTS
+}

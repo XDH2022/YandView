@@ -6,7 +6,7 @@ import android.content.Intent
 import android.media.MediaScannerConnection
 import android.os.*
 import android.util.Log
-import com.lsp.view.util.Code
+import com.lsp.view.util.CallBackStatus
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
@@ -19,19 +19,15 @@ class DownloadService : Service() {
     private val mBinder = DownloadBinder(this)
 
     class DownloadBinder(val context: Context) : Binder() {
-        fun sendOK(file:File, handler: Handler){
-            val msg = Message.obtain()
-            msg.what = Code.OK
-            msg.obj = file
-            handler.sendMessage(msg)
-        }
 
-
-        fun sendError(handler: Handler){
+        fun callBack(handler: Handler,status:CallBackStatus,obj:Any?=null){
             val msg = Message.obtain()
-            msg.what = Code.DOWNLOADERROR
-            msg.obj = null
+            msg.what = status.ordinal
+            if (obj!=null){
+                msg.obj = obj
+            }
             handler.sendMessage(msg)
+
         }
         fun downloadPic(file_url: String, end: String,handler: Handler,md5 : String?) {
 
@@ -58,11 +54,11 @@ class DownloadService : Service() {
                                 context, arrayOf(file.path),
                                 null, null
                             )
-                            if (md5==getFileMD5(file.path)){
-                                sendOK(file, handler)
-                            }else{
+                            if (md5 == getFileMD5(file.path)) {
+                                callBack(handler, CallBackStatus.OK,file)
+                            } else {
                                 file.delete()
-                                sendMD5Error(handler)
+                                callBack(handler,CallBackStatus.MD5COMPAREERROR)
                             }
 
                             return@thread
@@ -70,14 +66,14 @@ class DownloadService : Service() {
                         } else {
                             Log.e("Test", "errorNet")
                             file.delete()
-                            sendError(handler)
+                            callBack(handler, CallBackStatus.NETWORKERROR)
                             return@thread
                         }
 
 
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        sendError(handler)
+                        callBack(handler, CallBackStatus.DOWNLOADERROR)
                         return@thread
                     } finally {
                         fos.close()
@@ -85,9 +81,9 @@ class DownloadService : Service() {
 
                 } else {
                     FileD.mkdirs()
-                    downloadPic(file_url, end, handler,md5)
+                    downloadPic(file_url, end, handler, md5)
                 }
-                sendError(handler)
+                callBack(handler,CallBackStatus.DOWNLOADERROR)
             }
         }
 
@@ -138,12 +134,6 @@ class DownloadService : Service() {
                 result.append(hexStr)
             }
             return result.toString()
-        }
-        fun sendMD5Error(handler: Handler){
-            val msg = Message.obtain()
-            msg.what = Code.MD5ERROR
-            msg.obj = null
-            handler.sendMessage(msg)
         }
     }
 
