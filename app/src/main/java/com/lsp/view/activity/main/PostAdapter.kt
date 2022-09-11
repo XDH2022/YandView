@@ -17,8 +17,7 @@ import com.bumptech.glide.load.model.LazyHeaders
 import com.lsp.view.R
 import com.lsp.view.activity.pic.PicActivity
 import com.lsp.view.bean.Post_yand
-import com.lsp.view.util.DownloadUtil
-import com.lsp.view.util.ShareUtil
+import com.lsp.view.util.Util
 import kotlin.math.hypot
 
 
@@ -129,11 +128,11 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
         }
 
         holder.quick_download.setOnClickListener {
-            DownloadUtil.download(postYandList[position].file_url,postYandList[position].file_ext,postYandList[position].md5)
+            Util.download(postYandList[position].file_url,postYandList[position].file_ext,postYandList[position].md5)
         }
 
         holder.quick_share.setOnClickListener {
-            ShareUtil.share(postYandList[position].sample_url,context)
+            Util.share(postYandList[position].sample_url,context)
         }
 
         holder.picImage.layoutParams.height = postYandList[position].sample_height

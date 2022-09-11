@@ -1,5 +1,6 @@
 package com.lsp.view
 
+import android.os.Environment
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
@@ -20,5 +21,9 @@ class ExampleInstrumentedTest {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("com.lsp.view", appContext.packageName)
+    }
+
+    fun getPath(){
+        println(Environment.getExternalStorageDirectory().toString())
     }
 }
