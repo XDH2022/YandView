@@ -9,6 +9,7 @@ import android.os.*
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
@@ -20,6 +21,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.github.chrisbanes.photoview.PhotoView
 import com.google.android.flexbox.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.lsp.view.R
 import com.lsp.view.activity.BaseActivity
@@ -113,7 +115,7 @@ class PicActivity : BaseActivity() {
         val file_url = intent.getStringExtra("file_url")
         val file_ext = intent.getStringExtra("file_ext")
         val download =
-            findViewById<View>(
+            findViewById<FloatingActionButton>(
                 R.id.download
             )
 
@@ -142,7 +144,7 @@ class PicActivity : BaseActivity() {
                     }
                 })
         }
-        val share = findViewById<View>(R.id.share)
+        val share = findViewById<FloatingActionButton>(R.id.share)
         share.setOnClickListener {
             if (sample_url != null) {
                 Util.share(sample_url,this)
@@ -153,6 +155,18 @@ class PicActivity : BaseActivity() {
         download.setOnClickListener {
             Util.download(file_url, file_ext, md5)
         }
+
+        val f_btn = findViewById<FloatingActionButton>(R.id.float_btn)
+        val ctrl = findViewById<LinearLayout>(R.id.ctrl)
+
+
+        f_btn.setOnClickListener {
+            if (ctrl.visibility == View.VISIBLE)
+                ctrl.visibility = View.GONE
+            else
+                ctrl.visibility = View.VISIBLE
+        }
+
     }
 
     override fun onBackPressed() {
