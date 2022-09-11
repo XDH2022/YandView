@@ -18,6 +18,7 @@ import com.lsp.view.R
 import com.lsp.view.activity.pic.PicActivity
 import com.lsp.view.bean.Post_yand
 import com.lsp.view.util.DownloadUtil
+import com.lsp.view.util.ShareUtil
 import kotlin.math.hypot
 
 
@@ -28,6 +29,7 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
         val picImage: ImageView = view.findViewById<ImageView>(R.id.picImgae)
         val quick_ctrl: LinearLayout = view.findViewById(R.id.quick_ctrl)
         val quick_download : ImageView = view.findViewById(R.id.quick_download)
+        val quick_share : ImageView = view.findViewById(R.id.quick_share)
 
     }
 
@@ -101,8 +103,9 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
             val radius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
 
             val anim = ViewAnimationUtils.createCircularReveal(holder.quick_ctrl, cx, cy, 0f, radius)
-            holder.quick_ctrl.visibility = View.VISIBLE
             anim.start()
+
+            holder.quick_ctrl.visibility = View.VISIBLE
 
             true
         }
@@ -127,6 +130,10 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
 
         holder.quick_download.setOnClickListener {
             DownloadUtil.download(postYandList[position].file_url,postYandList[position].file_ext,postYandList[position].md5)
+        }
+
+        holder.quick_share.setOnClickListener {
+            ShareUtil.share(postYandList[position].sample_url,context)
         }
 
         holder.picImage.layoutParams.height = postYandList[position].sample_height
