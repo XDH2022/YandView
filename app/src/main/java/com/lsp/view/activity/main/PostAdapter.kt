@@ -24,6 +24,9 @@ import kotlin.math.hypot
 class PostAdapter(val context: Context, private var postYandList: ArrayList<Post_yand>) :
     RecyclerView.Adapter<PostAdapter.ViewHolder>() {
     val TAG = this::class.java.simpleName
+    private val UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
+
+
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val picImage: ImageView = view.findViewById<ImageView>(R.id.picImgae)
         val quick_ctrl: LinearLayout = view.findViewById(R.id.quick_ctrl)
@@ -82,19 +85,33 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
 
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val post = postYandList[position]
-        //TODO 增加XML解析 节省流量
-        val glideUrl: GlideUrl
-        var source: String = post.sample_url
+    private fun preLoad(p:Int){
+        if (p%20==0){
+            //执行预加载
+            val last:Int = if (postYandList.size-p<20){
+                postYandList.size-1
+            }else{
+                p+19
+            }
+            for(index in  p..last){
+                val source: String = postYandList[index].sample_url
+                val glideUrl = GlideUrl(
+                    source,
+                    LazyHeaders.Builder().addHeader("User-Agent", UA)
+                        .build()
+                )
+                Glide.with(context).download(glideUrl).preload()
+            }
+        }
+    }
 
-        glideUrl = GlideUrl(
-            source,
-            LazyHeaders.Builder().addHeader(
-                "User-Agent",
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
-            ).build()
-        )
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
+        preLoad(position)
+
+        val post = postYandList[position]
+
+        val source: String = post.sample_url
 
         holder.picImage.setOnLongClickListener {
             val cx = holder.picImage.width / 2
@@ -136,7 +153,7 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
         }
 
         holder.picImage.layoutParams.height = postYandList[position].sample_height
-        Glide.with(context).load(glideUrl).into(holder.picImage)
+        Glide.with(context).load(source).into(holder.picImage)
         if (position == postYandList.size - 1 && postYandList.size > 6) {
             //到达底部
             mLoadMoreListener.loadMore(position)
