@@ -28,7 +28,7 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
 
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val picImage: ImageView = view.findViewById<ImageView>(R.id.picImgae)
+        val picImage: ImageView = view.findViewById(R.id.picImgae)
         val quick_ctrl: LinearLayout = view.findViewById(R.id.quick_ctrl)
         val quick_download : ImageView = view.findViewById(R.id.quick_download)
         val quick_share : ImageView = view.findViewById(R.id.quick_share)

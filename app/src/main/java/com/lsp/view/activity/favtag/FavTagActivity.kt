@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.*
@@ -30,8 +29,8 @@ class FavTagActivity : BaseActivity() {
         val appbar = findViewById<AppBarLayout>(R.id.appbar)
         val nowHeight = appbar.layoutParams.height
         appbar.layoutParams.height = (application as MyApplication).statusBarHeight()+nowHeight
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
-        supportActionBar?.setHomeButtonEnabled(true);
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
 
         val recyclerViewTag = findViewById<RecyclerView>(R.id.tag_recy)
         recyclerViewTag.layoutManager = layoutManager()

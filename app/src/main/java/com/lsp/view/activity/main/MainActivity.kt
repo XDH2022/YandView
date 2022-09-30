@@ -11,7 +11,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.LinearLayout
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
@@ -38,11 +37,10 @@ class MainActivity : BaseActivity() {
     private lateinit var searchBar: LinearLayout
     private var shortAnnotationDuration: Int = 0
     private var nowPage = 1
-    private val adapter: PostAdapter = PostAdapter(this, ArrayList<Post_yand>())
+    private val adapter: PostAdapter = PostAdapter(this, ArrayList())
     private var username: String? = ""
     private lateinit var sourceUrlArray: Array<String>
     private lateinit var sourceNameArray: Array<String>
-    private lateinit var source: String
     private var nowSourceName: String? = null
     val TAG = javaClass.simpleName
     private lateinit var layoutManager: RecyclerView.LayoutManager
@@ -90,7 +88,7 @@ class MainActivity : BaseActivity() {
 
         //横屏逻辑
         layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerview)
+        recyclerView = findViewById(R.id.recyclerview)
 
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
@@ -105,7 +103,7 @@ class MainActivity : BaseActivity() {
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
 
 
-        search = findViewById<EditText>(R.id.search)
+        search = findViewById(R.id.search)
         //快捷搜索tag 来自PicActivity
         searchTag = intent.getStringExtra("searchTag")
         if (searchTag != null) {
@@ -124,7 +122,7 @@ class MainActivity : BaseActivity() {
             it.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24)
         }
 
-        searchBar = findViewById<LinearLayout>(R.id.search_bar)
+        searchBar = findViewById(R.id.search_bar)
         shortAnnotationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
         close.setOnClickListener {
             hiddenSearchBar()
@@ -202,28 +200,6 @@ class MainActivity : BaseActivity() {
 
     }
 
-
-    //弹出键入用户名对话框
-    private fun alterEditDialog() {
-        val et = EditText(this)
-        AlertDialog.Builder(this)
-            .setTitle("请输入您的yande.re用户名")
-            .setView(et)
-            .setPositiveButton("确定") { _, _ ->
-                Log.w(TAG, et.text.toString())
-                val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
-                if (et.text.toString() != "") {
-                    val sharedPreferences = getSharedPreferences("username", 0).edit()
-                    sharedPreferences.putString("username", et.text.toString()).apply()
-                    loadData( "vote:3:$username order:vote", 1, ISREFRESH)
-                    drawerLayout.closeDrawers()
-                } else {
-                    Snackbar.make(drawerLayout, "用户名不能为空！", Snackbar.LENGTH_SHORT).show()
-                }
-            }.create().show()
-
-    }
-
     //隐藏搜索栏
     private fun hiddenSearchBar() {
         searchBar.animate()
@@ -241,7 +217,6 @@ class MainActivity : BaseActivity() {
 
     //现实搜索栏
     private fun showSearchBar() {
-        val controller = ViewCompat.getWindowInsetsController(window.decorView)
         searchBar.apply {
             alpha = 0f
             visibility = View.VISIBLE
@@ -359,7 +334,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.toolbar_menu, menu);
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
         return true
     }
 

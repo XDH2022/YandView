@@ -1,16 +1,11 @@
 package com.lsp.view.activity
 
-import android.app.Activity
-import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat.Type.statusBars
-import com.lsp.view.R
 
 open class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +17,7 @@ open class BaseActivity : AppCompatActivity() {
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             //设置导航栏透明
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
         }
     }
     private fun transparentStatusBar(){

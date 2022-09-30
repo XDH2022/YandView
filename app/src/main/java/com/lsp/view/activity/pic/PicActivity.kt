@@ -41,7 +41,6 @@ class PicActivity : BaseActivity() {
     private val tagList = ArrayList<Tags>()
     private val authorList = ArrayList<Author>()
     private val idList = ArrayList<ID>()
-    private val time = System.currentTimeMillis()
     private val sizeList = ArrayList<Size>()
     private lateinit var image: ImageView
     private lateinit var photoView: PhotoView
@@ -72,7 +71,7 @@ class PicActivity : BaseActivity() {
 
         setContentView(R.layout.activity_pic)
 
-        image = findViewById<ImageView>(R.id.titleImage)
+        image = findViewById(R.id.titleImage)
         shortAnnotationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
         val intent = intent
         val tags = intent.getStringExtra("tags")
@@ -119,7 +118,7 @@ class PicActivity : BaseActivity() {
                 R.id.download
             )
 
-        photoView = findViewById<PhotoView>(R.id.photoView)
+        photoView = findViewById(R.id.photoView)
 
         image.setOnClickListener {
             photoView.apply {
