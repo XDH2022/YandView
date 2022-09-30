@@ -11,6 +11,7 @@ import android.os.Message
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
+import com.lsp.view.R
 import com.lsp.view.YandViewApplication
 import java.io.File
 import kotlin.concurrent.thread
@@ -45,7 +46,7 @@ object Util {
             shareIntent.type = "image/*"
             shareIntent.putExtra(Intent.EXTRA_STREAM,imageUri)
 
-            val intent = Intent.createChooser(shareIntent,"分享")
+            val intent = Intent.createChooser(shareIntent,R.string.title_share.toString())
 
             val resInfoList: List<ResolveInfo> = context.packageManager
                 .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
@@ -65,7 +66,7 @@ object Util {
     }
 
     fun download(file_url: String?, file_ext: String?,md5: String?){
-        Toast.makeText(YandViewApplication.context, "开始保存", Toast.LENGTH_SHORT).show()
+        Toast.makeText(YandViewApplication.context, R.string.toast_download_start, Toast.LENGTH_SHORT).show()
 
         if (file_url != null) {
             if (file_ext != null) {
@@ -79,19 +80,19 @@ object Util {
             super.handleMessage(msg)
             when(msg.what){
                 CallBackStatus.OK.ordinal ->{
-                    Toast.makeText(YandViewApplication.context, "保存成功", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(YandViewApplication.context, R.string.toast_download_success, Toast.LENGTH_SHORT).show()
                 }
 
                 CallBackStatus.DOWNLOADERROR.ordinal -> {
-                    Toast.makeText(YandViewApplication.context, "下载异常", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(YandViewApplication.context, R.string.toast_download_fail, Toast.LENGTH_SHORT).show()
 
                 }
                 CallBackStatus.MD5COMPAREERROR.ordinal -> {
-                    Toast.makeText(YandViewApplication.context, "文件下载异常，MD5对比失败", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(YandViewApplication.context, R.string.toast_compar_md5_fail, Toast.LENGTH_SHORT).show()
 
                 }
                 CallBackStatus.FILEEXISTS.ordinal -> {
-                    Toast.makeText(YandViewApplication.context, "文件已经存在", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(YandViewApplication.context, R.string.toast_file_exist, Toast.LENGTH_SHORT).show()
 
                 }
             }

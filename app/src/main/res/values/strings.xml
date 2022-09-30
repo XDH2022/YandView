@@ -23,4 +23,10 @@
     <string name="title_setting_load_source">Load source</string>
     <string name="toast_tag_add_fav">Add to new favorites</string>
     <string name="toast_tag_exist">This tag exist</string>
+    <string name="toast_download_success">Successfully download</string>
+    <string name="toast_download_fail">Download failed</string>
+    <string name="toast_compar_md5_fail">MD5 comparison failed</string>
+    <string name="toast_file_exist">File exists</string>
+    <string name="toast_download_start">Start download</string>
+    <string name="title_share">Share</string>
 </resources>
