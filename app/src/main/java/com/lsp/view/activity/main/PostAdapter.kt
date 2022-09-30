@@ -153,7 +153,7 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
         }
 
         holder.picImage.layoutParams.height = postYandList[position].sample_height
-        Glide.with(context).load(source).into(holder.picImage)
+        Glide.with(context).load(source).onlyRetrieveFromCache(true).into(holder.picImage)
         if (position == postYandList.size - 1 && postYandList.size > 6) {
             //到达底部
             mLoadMoreListener.loadMore(position)
