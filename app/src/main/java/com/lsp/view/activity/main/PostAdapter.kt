@@ -158,7 +158,7 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
             LazyHeaders.Builder().addHeader("User-Agent", UA)
                 .build()
         )
-        Glide.with(context).download(glideUrl).preload()
+        Glide.with(context).load(glideUrl).into(holder.picImage)
 
         if (position == postYandList.size - 1 && postYandList.size > 6) {
             //到达底部
