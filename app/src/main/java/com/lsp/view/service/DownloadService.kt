@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.media.MediaScannerConnection
 import android.os.*
-import android.util.Log
 import com.lsp.view.util.CallBackStatus
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -40,7 +39,6 @@ class DownloadService : Service() {
 
                     if (file.exists()){
                         callBack(handler,CallBackStatus.FILEEXISTS)
-                        Log.e("callback","文件存在")
                         return@thread
                     }
 
@@ -71,7 +69,6 @@ class DownloadService : Service() {
                             return@thread
 
                         } else {
-                            Log.e("Test", "errorNet")
                             file.delete()
                             callBack(handler, CallBackStatus.NETWORKERROR)
                             return@thread

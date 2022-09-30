@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.os.*
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -259,7 +258,6 @@ class MainActivity : BaseActivity() {
 
     //执行搜索
     private fun searchAction(tags: String?) {
-        Log.e("num",tags.toString())
         var tag = tags
         var isNum = true
         try {
@@ -282,8 +280,6 @@ class MainActivity : BaseActivity() {
     private fun loadData(tags: String?,page: Int,type:Int){
         //缓存搜索的tags
         this.tags = tags
-
-        Log.e(TAG,"now page is $page")
 
         val swipeRefreshLayout =
             findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(

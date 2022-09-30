@@ -63,7 +63,6 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
             if (file_ext == null){
                 val strarr = postYandList[position].sample_url.split(".")
                 file_ext = strarr[strarr.lastIndex]
-                Log.e("file_ext",file_ext)
             }
 
             PicActivity.actionStartActivity(context,postYandList[position].id,postYandList[position].sample_url,

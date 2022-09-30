@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.*
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -200,7 +199,7 @@ class PicActivity : BaseActivity() {
                 isFirstResource: Boolean
             ): Boolean {
                 if (e != null) {
-                    Log.e("Pic", e.stackTraceToString())
+                    e.printStackTrace()
                 }
                 val pb = findViewById<ProgressBar>(R.id.pb)
                 Snackbar.make(pb, R.string.toast_load_fail, Snackbar.LENGTH_LONG).setAction(R.string.button_check) {

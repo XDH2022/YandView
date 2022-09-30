@@ -1,6 +1,5 @@
 package com.lsp.view.activity.pic
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,6 @@ class SizeAdapter(val tagList: List<Size>) : RecyclerView.Adapter<SizeAdapter.Vi
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val tag = tagList[position]
-        Log.e("size", tag.file_size)
         if (position == 0) {
             holder.tagText.text = tag.file_size
             holder.tagText.setBackgroundResource(R.drawable.title_bg)
