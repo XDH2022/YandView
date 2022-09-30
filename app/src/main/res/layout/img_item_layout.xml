@@ -32,7 +32,7 @@
                             android:background="@drawable/ic_twotone_arrow_downward_24"
                             android:id="@+id/quick_download"
                             android:layout_margin="15dp"
-                            android:contentDescription="Download" />
+                            android:contentDescription="@string/description_download" />
 
                         <ImageView
                             android:layout_width="35dp"
@@ -40,7 +40,7 @@
                             android:background="@drawable/ic_twotone_share_24"
                             android:id="@+id/quick_share"
                             android:layout_margin="15dp"
-                            android:contentDescription="Share" />
+                            android:contentDescription="@string/description_share" />
                 </LinearLayout>
 
         </FrameLayout>

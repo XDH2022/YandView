@@ -332,7 +332,7 @@ class MainActivity : BaseActivity() {
                 super.handleMessage(msg)
                 when (msg.what){
                     CallBackStatus.DATAISNULL.ordinal ->{
-                        Snackbar.make(swipeRefreshLayout,"未找到内容",Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(swipeRefreshLayout,R.string.toast_load_empty,Snackbar.LENGTH_SHORT).show()
                         search.setText("")
                     }
                     CallBackStatus.OK.ordinal -> {
@@ -345,7 +345,7 @@ class MainActivity : BaseActivity() {
 
                     }
                     CallBackStatus.NETWORKERROR.ordinal -> {
-                        Snackbar.make(swipeRefreshLayout,"网络连接失败",Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(swipeRefreshLayout,R.string.toast_load_network_fail,Snackbar.LENGTH_SHORT).show()
                     }
                 }
 

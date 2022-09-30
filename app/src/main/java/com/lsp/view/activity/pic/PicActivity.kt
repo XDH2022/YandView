@@ -204,13 +204,13 @@ class PicActivity : BaseActivity() {
                     Log.e("Pic", e.stackTraceToString())
                 }
                 val pb = findViewById<ProgressBar>(R.id.pb)
-                Snackbar.make(pb, "加载错误", Snackbar.LENGTH_LONG).setAction("查看Log") {
+                Snackbar.make(pb, R.string.toast_load_fail, Snackbar.LENGTH_LONG).setAction(R.string.button_check) {
                     AlertDialog.Builder(this@PicActivity).apply {
                         setTitle("Log")
                         if (e != null) {
                             setMessage(e.stackTraceToString())
                         }
-                        setNegativeButton("确定", null)
+                        setNegativeButton(R.string.button_ok, null)
                         create()
                         show()
                     }

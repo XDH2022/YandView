@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_settings">设置</string>
+    <string name="title_activity_favouriteTag">收藏标签</string>
+    <string name="item_gallery">画廊</string>
+    <string name="item_collect">收藏</string>
+    <string name="item_settings">设置</string>
+    <string name="item_search">搜索</string>
+    <string name="description_download">下载</string>
+    <string name="description_share">分享</string>
+    <string name="activity_login_login">登录</string>
+    <string name="activity_login_account">账户</string>
+    <string name="activity_login_password">密码</string>
+    <string name="toast_load_fail">加载失败</string>
+    <string name="button_check">查看</string>
+    <string name="button_ok">好的</string>
+    <string name="toast_load_empty">没有更多内容</string>
+    <string name="toast_load_network_fail">连接失败，请检查网络</string>
+</resources>

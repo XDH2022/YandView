@@ -16,7 +16,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:id="@+id/toolbar"
-                    app:title="FavouriteTag"
+                    app:title="@string/title_activity_favouriteTag"
                     />
 
         </com.google.android.material.appbar.AppBarLayout>

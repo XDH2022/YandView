@@ -13,16 +13,16 @@
         android:layout_height="wrap_content"
         android:textSize="44sp"
         android:id="@+id/title"
-        android:text="Login"/>
+        android:text="@string/activity_login_login"/>
     <EditText
-        android:hint="账号..."
+        android:hint="@string/activity_login_account"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:id="@+id/username"/>
     <EditText
-        android:hint="密码..."
+        android:hint="@string/activity_login_password"
         android:inputType="textPassword"
         android:layout_gravity="center"
         android:layout_width="240dp"
