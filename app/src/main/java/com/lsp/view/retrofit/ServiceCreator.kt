@@ -1,4 +1,4 @@
-package com.hentai.yandeview.Retrofit
+package com.lsp.view.retrofit
 
 import android.util.Log
 import retrofit2.Retrofit
@@ -19,7 +19,7 @@ object ServiceCreator {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         Log.e("Post", source)
-        this.source = source
+        ServiceCreator.source = source
         return retrofit.create(serviceClass)
     }
 

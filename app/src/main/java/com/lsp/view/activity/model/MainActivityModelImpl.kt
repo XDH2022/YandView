@@ -2,8 +2,8 @@ package com.lsp.view.activity.model
 
 import android.os.Handler
 import android.os.Message
-import com.hentai.yandeview.Retrofit.PostService
-import com.hentai.yandeview.Retrofit.ServiceCreator
+import com.lsp.view.retrofit.PostService
+import com.lsp.view.retrofit.ServiceCreator
 import com.lsp.view.bean.Post
 import com.lsp.view.bean.Post_yand
 import com.lsp.view.util.CallBackStatus
@@ -15,7 +15,7 @@ import kotlin.collections.ArrayList
 class MainActivityModelImpl :MainActivityModel {
     private val TAG = this::class.java.simpleName
     override fun requestPostList(handler: Handler, source: String, tage: String?, page: Int,safeMode: Boolean){
-        val postService:PostService = ServiceCreator.create(source)
+        val postService: PostService = ServiceCreator.create(source)
         val service: Call<ArrayList<Post_yand>> = postService.getPostData("100",tage, page)
         request(service,safeMode, handler)
     }
