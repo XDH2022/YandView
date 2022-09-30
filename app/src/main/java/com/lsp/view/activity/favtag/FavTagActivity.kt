@@ -11,7 +11,7 @@ import com.google.android.flexbox.*
 import com.google.android.material.appbar.AppBarLayout
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.lsp.view.MyApplication
+import com.lsp.view.YandViewApplication
 import com.lsp.view.R
 import com.lsp.view.activity.BaseActivity
 import com.lsp.view.activity.main.MainActivity
@@ -28,7 +28,7 @@ class FavTagActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         val appbar = findViewById<AppBarLayout>(R.id.appbar)
         val nowHeight = appbar.layoutParams.height
-        appbar.layoutParams.height = (application as MyApplication).statusBarHeight()+nowHeight
+        appbar.layoutParams.height = (application as YandViewApplication).statusBarHeight()+nowHeight
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
 
