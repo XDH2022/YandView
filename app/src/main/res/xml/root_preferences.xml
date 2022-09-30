@@ -1,7 +1,7 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="加载源"
+    <PreferenceCategory app:title="@string/title_setting_load_source"
         >
 
         <ListPreference
@@ -9,14 +9,14 @@
             app:entries="@array/pic_source"
             app:entryValues="@array/pic_source"
             app:key="sourceName"
-            app:title="选择源"
+            app:title="@string/setting_item_select_source"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
-    <PreferenceCategory app:title="安全检查">
+    <PreferenceCategory app:title="@string/title_setting_safe_check">
         <CheckBoxPreference
             app:defaultValue="true"
-            app:title="安全模式"
+            app:title="@string/setting_item_safe_model"
             app:key="safe_mode"/>
     </PreferenceCategory>
 

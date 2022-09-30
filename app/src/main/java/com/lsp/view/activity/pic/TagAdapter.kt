@@ -48,14 +48,14 @@ class TagAdapter(val tagList: List<Tags>, val context: Context) :
             }
             for (tag: Tags in tagsArray) {
                 if (tag.tag == viewHolder.tagText.text.toString()) {
-                    Snackbar.make(viewHolder.tagText, "收藏过了哦", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(viewHolder.tagText, R.string.toast_tag_exist, Snackbar.LENGTH_SHORT).show()
                     return@setOnLongClickListener true
                 }
             }
 
             tagsArray.add(Tags(viewHolder.tagText.text.toString()))
             tagsArraySp.edit().putString("array", Gson().toJson(tagsArray)).apply()
-            Snackbar.make(viewHolder.tagText, "收藏了新标签", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(viewHolder.tagText, R.string.toast_tag_add_fav, Snackbar.LENGTH_SHORT).show()
 
             return@setOnLongClickListener true
         }

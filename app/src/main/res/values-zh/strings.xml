@@ -16,4 +16,10 @@
     <string name="button_ok">好的</string>
     <string name="toast_load_empty">没有更多内容</string>
     <string name="toast_load_network_fail">连接失败，请检查网络</string>
+    <string name="title_setting_safe_check">安全检查</string>
+    <string name="setting_item_safe_model">安全模式</string>
+    <string name="setting_item_select_source">选择源</string>
+    <string name="title_setting_load_source">加载源</string>
+    <string name="toast_tag_add_fav">收藏了新的标签</string>
+    <string name="toast_tag_exist">收藏过了哦</string>
 </resources>

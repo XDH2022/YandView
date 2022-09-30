@@ -17,4 +17,10 @@
     <string name="button_ok">OK</string>
     <string name="toast_load_empty">Empty</string>
     <string name="toast_load_network_fail">Connection fail</string>
+    <string name="title_setting_safe_check">Safe Check</string>
+    <string name="setting_item_safe_model">Safe model</string>
+    <string name="setting_item_select_source">Select source</string>
+    <string name="title_setting_load_source">Load source</string>
+    <string name="toast_tag_add_fav">Add to new favorites</string>
+    <string name="toast_tag_exist">This tag exist</string>
 </resources>
