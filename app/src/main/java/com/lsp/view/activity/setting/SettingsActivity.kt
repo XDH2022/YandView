@@ -5,7 +5,7 @@ import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.appbar.AppBarLayout
-import com.lsp.view.MyApplication
+import com.lsp.view.YandViewApplication
 import com.lsp.view.R
 import com.lsp.view.activity.BaseActivity
 
@@ -20,7 +20,7 @@ class SettingsActivity : BaseActivity() {
 
         val appbar = findViewById<AppBarLayout>(R.id.appbar)
         val nowHeight = appbar.layoutParams.height
-        appbar.layoutParams.height = (application as MyApplication).statusBarHeight()+nowHeight
+        appbar.layoutParams.height = (application as YandViewApplication).statusBarHeight()+nowHeight
 
         if (savedInstanceState == null) {
             supportFragmentManager

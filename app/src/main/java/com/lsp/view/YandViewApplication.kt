@@ -1,72 +1,58 @@
-package com.lsp.view;
+package com.lsp.view
 
-import android.app.Application;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
+import android.app.Application
+import androidx.lifecycle.DefaultLifecycleObserver
+import android.content.ServiceConnection
+import android.content.ComponentName
+import android.content.Context
+import android.os.IBinder
+import com.lsp.view.service.DownloadService.DownloadBinder
+import com.google.android.material.color.DynamicColors
+import android.content.Intent
+import com.lsp.view.service.DownloadService
+import androidx.lifecycle.LifecycleOwner
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.DefaultLifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
-
-import com.google.android.material.color.DynamicColors;
-import com.lsp.view.service.DownloadService;
-
-public class MyApplication extends Application implements DefaultLifecycleObserver{
-    private static Context context;
-    private static DownloadService.DownloadBinder downloadBinder;
-    private final ServiceConnection connection = new ServiceConnection(){
-
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            downloadBinder = (DownloadService.DownloadBinder) iBinder;
+class YandViewApplication : Application(), DefaultLifecycleObserver {
+    private val connection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
+            downloadBinder = iBinder as DownloadBinder
         }
 
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-
-        }
-    };
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        context = getApplicationContext();
-        DynamicColors.applyToActivitiesIfAvailable(this);
-
-        Intent serviceIntent = new Intent(this, DownloadService.class);
-        bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
-
-        statusBarHeight();
+        override fun onServiceDisconnected(componentName: ComponentName) {}
     }
 
-    @Override
-    public void onDestroy(@NonNull LifecycleOwner owner) {
-        DefaultLifecycleObserver.super.onDestroy(owner);
-        unbindService(connection);
+    override fun onCreate() {
+        super<Application>.onCreate()
+        context = applicationContext
+        DynamicColors.applyToActivitiesIfAvailable(this)
+        val serviceIntent = Intent(this, DownloadService::class.java)
+        bindService(serviceIntent, connection, BIND_AUTO_CREATE)
+        statusBarHeight()
     }
 
-    public static Context getContext() {
-        return context;
-    }
-
-    public static DownloadService.DownloadBinder getDownloadBinder() {
-        return downloadBinder;
+    override fun onDestroy(owner: LifecycleOwner) {
+        super.onDestroy(owner)
+        unbindService(connection)
     }
 
     //计算状态栏高度
-    public int statusBarHeight() {
-        int height = 0;
-        int resourceId = getResources().getIdentifier(
-                "status_bar_height",
-                "dimen",
-                "android"
-        );
+    fun statusBarHeight(): Int {
+        var height = 0
+        val resourceId = resources.getIdentifier(
+            "status_bar_height",
+            "dimen",
+            "android"
+        )
         if (resourceId > 0) {
-            height = getResources().getDimensionPixelSize(resourceId);
+            height = resources.getDimensionPixelSize(resourceId)
         }
-        return height;
+        return height
+    }
+
+    companion object {
+        var context: Context? = null
+            private set
+        var downloadBinder: DownloadBinder? = null
+            private set
     }
 }

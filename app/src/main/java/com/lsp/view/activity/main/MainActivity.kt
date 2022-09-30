@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import com.lsp.view.MyApplication
+import com.lsp.view.YandViewApplication
 import com.lsp.view.R
 import com.lsp.view.activity.BaseActivity
 import com.lsp.view.activity.favtag.FavTagActivity
@@ -60,7 +60,7 @@ class MainActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         val appbar = findViewById<AppBarLayout>(R.id.appbar)
         val nowHeight = appbar.layoutParams.height
-        appbar.layoutParams.height = (application as MyApplication).statusBarHeight()+nowHeight
+        appbar.layoutParams.height = (application as YandViewApplication).statusBarHeight()+nowHeight
 
         //到达底部，加载更多数据
         adapter.setLoadMoreListener(object : PostAdapter.OnLoadMoreListener {
