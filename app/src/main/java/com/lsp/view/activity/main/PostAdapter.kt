@@ -70,6 +70,38 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
                 postYandList[position].author,postYandList[position].file_size,postYandList[position].md5)
         }
 
+        viewHolder.picImage.setOnLongClickListener {
+            val cx = viewHolder.picImage.width / 2
+            val cy = viewHolder.picImage.height / 2
+            val radius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+
+            val anim = ViewAnimationUtils.createCircularReveal(viewHolder.quick_ctrl, cx, cy, 0f, radius)
+            anim.start()
+
+            viewHolder.quick_ctrl.visibility = View.VISIBLE
+
+            true
+        }
+
+        viewHolder.quick_ctrl.setOnClickListener {
+            val cx = viewHolder.picImage.width / 2
+            val cy = viewHolder.picImage.height / 2
+            val radius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+
+            val anim = ViewAnimationUtils.createCircularReveal(viewHolder.quick_ctrl, cx, cy, radius, 0f)
+
+            anim.addListener(object : AnimatorListenerAdapter() {
+
+                override fun onAnimationEnd(animation: Animator) {
+                    super.onAnimationEnd(animation)
+                    viewHolder.quick_ctrl.visibility = View.INVISIBLE
+                }
+            })
+            anim.start()
+
+        }
+
+
         return viewHolder
     }
 
@@ -93,13 +125,15 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
                 p+19
             }
             for(index in  p..last){
-                val source: String = postYandList[index].sample_url
-                val glideUrl = GlideUrl(
-                    source,
-                    LazyHeaders.Builder().addHeader("User-Agent", UA)
-                        .build()
-                )
-                Glide.with(context).download(glideUrl).preload()
+                if (p>6) {
+                    val source: String = postYandList[index].sample_url
+                    val glideUrl = GlideUrl(
+                        source,
+                        LazyHeaders.Builder().addHeader("User-Agent", UA)
+                            .build()
+                    )
+                    Glide.with(context).download(glideUrl).preload()
+                }
             }
         }
     }
@@ -112,37 +146,6 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
 
         val source: String = post.sample_url
 
-        holder.picImage.setOnLongClickListener {
-            val cx = holder.picImage.width / 2
-            val cy = holder.picImage.height / 2
-            val radius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
-
-            val anim = ViewAnimationUtils.createCircularReveal(holder.quick_ctrl, cx, cy, 0f, radius)
-            anim.start()
-
-            holder.quick_ctrl.visibility = View.VISIBLE
-
-            true
-        }
-
-        holder.quick_ctrl.setOnClickListener {
-            val cx = holder.picImage.width / 2
-            val cy = holder.picImage.height / 2
-            val radius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
-
-            val anim = ViewAnimationUtils.createCircularReveal(holder.quick_ctrl, cx, cy, radius, 0f)
-
-            anim.addListener(object : AnimatorListenerAdapter() {
-
-                override fun onAnimationEnd(animation: Animator) {
-                    super.onAnimationEnd(animation)
-                    holder.quick_ctrl.visibility = View.INVISIBLE
-                }
-            })
-            anim.start()
-
-        }
-
         holder.quick_download.setOnClickListener {
             Util.download(postYandList[position].file_url,postYandList[position].file_ext,postYandList[position].md5)
         }
@@ -151,7 +154,7 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
             Util.share(postYandList[position].sample_url,context)
         }
 
-        holder.picImage.layoutParams.height = postYandList[position].sample_height
+        holder.picImage.layoutParams.height = postYandList[position].sample_height/2
 
         val glideUrl = GlideUrl(
             source,
