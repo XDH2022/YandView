@@ -125,7 +125,7 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
                 p+19
             }
             for(index in  p..last){
-                if (p>4) {
+                if (p>6) {
                     val source: String = postYandList[index].sample_url
                     val glideUrl = GlideUrl(
                         source,
@@ -154,7 +154,7 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
             Util.share(postYandList[position].sample_url,context)
         }
 
-        holder.picImage.layoutParams.height = postYandList[position].sample_height
+        holder.picImage.layoutParams.height = postYandList[position].sample_height/2
 
         val glideUrl = GlideUrl(
             source,
