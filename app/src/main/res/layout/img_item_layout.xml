@@ -16,32 +16,6 @@
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     android:id="@+id/picImgae"/>
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    android:id="@+id/quick_ctrl"
-                    android:weightSum="3"
-                    android:background="?attr/colorBackgroundFloating"
-                    android:alpha="0.85"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                        <ImageView
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:background="@drawable/ic_twotone_arrow_downward_24"
-                            android:id="@+id/quick_download"
-                            android:layout_margin="15dp"
-                            android:contentDescription="@string/description_download" />
-
-                        <ImageView
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:background="@drawable/ic_twotone_share_24"
-                            android:id="@+id/quick_share"
-                            android:layout_margin="15dp"
-                            android:contentDescription="@string/description_share" />
-                </LinearLayout>
 
         </FrameLayout>
 
