@@ -70,6 +70,38 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
                 postYandList[position].author,postYandList[position].file_size,postYandList[position].md5)
         }
 
+        viewHolder.picImage.setOnLongClickListener {
+            val cx = viewHolder.picImage.width / 2
+            val cy = viewHolder.picImage.height / 2
+            val radius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+
+            val anim = ViewAnimationUtils.createCircularReveal(viewHolder.quick_ctrl, cx, cy, 0f, radius)
+            anim.start()
+
+            viewHolder.quick_ctrl.visibility = View.VISIBLE
+
+            true
+        }
+
+        viewHolder.quick_ctrl.setOnClickListener {
+            val cx = viewHolder.picImage.width / 2
+            val cy = viewHolder.picImage.height / 2
+            val radius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+
+            val anim = ViewAnimationUtils.createCircularReveal(viewHolder.quick_ctrl, cx, cy, radius, 0f)
+
+            anim.addListener(object : AnimatorListenerAdapter() {
+
+                override fun onAnimationEnd(animation: Animator) {
+                    super.onAnimationEnd(animation)
+                    viewHolder.quick_ctrl.visibility = View.INVISIBLE
+                }
+            })
+            anim.start()
+
+        }
+
+
         return viewHolder
     }
 
@@ -113,37 +145,6 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
         val post = postYandList[position]
 
         val source: String = post.sample_url
-
-        holder.picImage.setOnLongClickListener {
-            val cx = holder.picImage.width / 2
-            val cy = holder.picImage.height / 2
-            val radius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
-
-            val anim = ViewAnimationUtils.createCircularReveal(holder.quick_ctrl, cx, cy, 0f, radius)
-            anim.start()
-
-            holder.quick_ctrl.visibility = View.VISIBLE
-
-            true
-        }
-
-        holder.quick_ctrl.setOnClickListener {
-            val cx = holder.picImage.width / 2
-            val cy = holder.picImage.height / 2
-            val radius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
-
-            val anim = ViewAnimationUtils.createCircularReveal(holder.quick_ctrl, cx, cy, radius, 0f)
-
-            anim.addListener(object : AnimatorListenerAdapter() {
-
-                override fun onAnimationEnd(animation: Animator) {
-                    super.onAnimationEnd(animation)
-                    holder.quick_ctrl.visibility = View.INVISIBLE
-                }
-            })
-            anim.start()
-
-        }
 
         holder.quick_download.setOnClickListener {
             Util.download(postYandList[position].file_url,postYandList[position].file_ext,postYandList[position].md5)
