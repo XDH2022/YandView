@@ -93,13 +93,15 @@ class PostAdapter(val context: Context, private var postYandList: ArrayList<Post
                 p+19
             }
             for(index in  p..last){
-                val source: String = postYandList[index].sample_url
-                val glideUrl = GlideUrl(
-                    source,
-                    LazyHeaders.Builder().addHeader("User-Agent", UA)
-                        .build()
-                )
-                Glide.with(context).download(glideUrl).preload()
+                if (p>4) {
+                    val source: String = postYandList[index].sample_url
+                    val glideUrl = GlideUrl(
+                        source,
+                        LazyHeaders.Builder().addHeader("User-Agent", UA)
+                            .build()
+                    )
+                    Glide.with(context).download(glideUrl).preload()
+                }
             }
         }
     }
